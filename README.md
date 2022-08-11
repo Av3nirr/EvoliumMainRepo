@@ -19,7 +19,7 @@ Edit the Code
 
 Want to add new features to EvoPlugin or fix bugs yourself ? You can edit the code, by doing the following *four* things:
 
-1. Download EvoPlugin's source code and put it somewhere. We recommend you use something called Git if you already know how to use it, but you can also just download a .zip file (https://github.com/Palmuss/EvoliumRepo/archive/refs/heads/main.zip). (If you plan on contributing the changes, you will need to figure out Git.)
+1. Download EvoPlugin's source code and put it somewhere. We recommend you use something called Git if you already know how to use it, but [you can also just download a .zip file](https://github.com/Palmuss/EvoliumRepo/archive/refs/heads/main.zip). (If you plan on contributing the changes, you will need to figure out Git.)
 2. Install any version of Java greater than or equal to 17.
 3. Open terminal / command prompt / bash and navigate to the directory where you put the source code.
 
