@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.palmus.plugin.commands.ExpExecutor;
 import fr.palmus.plugin.commands.FarmzoneExecutor;
+import fr.palmus.plugin.commands.RTPExecutor;
 import fr.palmus.plugin.components.EvoComponent;
 import fr.palmus.plugin.components.MobManager;
 import fr.palmus.plugin.components.PlayerManager;
@@ -206,6 +207,7 @@ public class Main extends JavaPlugin {
     public void setCommands(){
         getCommand("exp").setExecutor(new ExpExecutor());
         getCommand("farmzone").setExecutor(new FarmzoneExecutor());
+        getCommand("rtp").setExecutor(new RTPExecutor());
         log.log(Level.INFO,ChatColor.GREEN + "Commands modules Enabled");
     }
 

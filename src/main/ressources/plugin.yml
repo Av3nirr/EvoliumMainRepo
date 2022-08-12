@@ -4,7 +4,6 @@ main: fr.palmus.plugin.Main
 version: 1.0
 api-version: 1.18
 depend:
-  - CoreProtect
   - LuckPerms
   - WorldGuard
   - WorldEdit
@@ -13,4 +12,6 @@ commands:
     description: Intéragir avec le plugin d'exp
     default: op
   farmzone:
+  rtp:
+    description: Téléporte le joueur aléatoirement
 
