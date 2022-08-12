@@ -1,7 +1,7 @@
 name: EvoPlugin
 author: Palmus_
-main: fr.palmus.plugin.Main
-version: 1.0
+main: fr.palmus.plugin.EvoPlugin
+version: 2.1.0
 api-version: 1.18
 depend:
   - CoreProtect
@@ -16,4 +16,32 @@ commands:
     description: Intéragir avec le module farmlands
   rtp:
     description: Téléporte le joueur aléatoirement
+  money:
+    description: Accéder au module d'economie
+  periode:
+    description: Accéder aux information à propos des périodes
+    aliases:
+      - info
+      - infos
+      - periodes
+
+permissions:
+  evoplugin.*:
+    description: Administrator permissions.
+    children:
+      evoplugin.mod: true
+      farmzone.set: true
+      shipbattle.setup: true
+
+  farmzone.set:
+    description: Defined farmzone.
+    default: false
+
+  evoplugin.exp_mod:
+    description: Access to exp moderation commands
+    default: op
+
+  evoplugin.econ_mod:
+    description: Jog a ShipBattle plugin setup parancsaihoz.
+    default: op
 

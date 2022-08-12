@@ -30,7 +30,10 @@ public class Economy {
         main.log.log(Level.INFO, ChatColor.GOLD + "Starting Economy module...");
         file = new File("plugins/EvoPlugin", "economy.yml");
         cfg = YamlConfiguration.loadConfiguration(file);
-        main.log.log(Level.INFO, ChatColor.GOLD + "Economy loaded");
+        main.log.log(Level.INFO, ChatColor.GOLD + "Economy config files loaded");
+        econManagement = new HashMap<>();
+        main.log.log(Level.INFO, ChatColor.GOLD + "Economy storage loaded");
+        main.log.log(Level.INFO, ChatColor.GREEN + "Economy module successfully load !");
     }
 
     public EconPlayerManager getPlayerEcon(Player pl){

@@ -5,17 +5,12 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import fr.palmus.plugin.commands.ExpExecutor;
-import fr.palmus.plugin.commands.FarmzoneExecutor;
-import fr.palmus.plugin.commands.RTPExecutor;
+import fr.palmus.plugin.commands.*;
 import fr.palmus.plugin.components.EvoComponent;
 import fr.palmus.plugin.components.MobManager;
 import fr.palmus.plugin.components.PlayerManager;
 import fr.palmus.plugin.economy.Economy;
-import fr.palmus.plugin.listeners.BlockManager;
-import fr.palmus.plugin.listeners.CraftManager;
-import fr.palmus.plugin.listeners.DamageManager;
-import fr.palmus.plugin.listeners.JoinQuitManager;
+import fr.palmus.plugin.listeners.*;
 import fr.palmus.plugin.utils.CustomItem;
 import fr.palmus.plugin.websockets.Client;
 import net.coreprotect.CoreProtectAPI;
@@ -91,7 +86,6 @@ public class EvoPlugin extends JavaPlugin {
         log.log(Level.INFO,ChatColor.GREEN + "Initialised !");
 
         if (plugin != null) {
-            //craftconomy = (Common) ((Loader) plugin).getCommon();
             System.out.println("[EvoPlugin] Craftconomy Hooked !");
         }
 
@@ -116,6 +110,7 @@ public class EvoPlugin extends JavaPlugin {
         }
 
         for (Player pl : Bukkit.getOnlinePlayers()) {
+            getComponents().createScoreboard(pl);
             if (cfg.get(pl.getDisplayName() + ".period") == null) {
                 cfg.set(pl.getDisplayName() + ".period", 0);
                 cfg.set(pl.getDisplayName() + ".exp", 0);
@@ -135,9 +130,13 @@ public class EvoPlugin extends JavaPlugin {
             LPapi = provider.getProvider();
             log.log(Level.INFO,ChatColor.GREEN + "LuckPerms Hooked !");
         }
+        log.log(Level.INFO,ChatColor.DARK_GREEN + "-------------------------------------------------------------------");
 
+        log.log(Level.WARNING,ChatColor.YELLOW + "Initializing recipies, this may take a few minutes because of Legacy intitialization");
         getComponents().initRecipies();
-        log.log(Level.INFO,ChatColor.YELLOW + "Initializing recipies...");
+        log.log(Level.INFO,ChatColor.YELLOW + "Recipies initialized successfully !");
+
+        log.log(Level.INFO,ChatColor.DARK_GREEN + "-------------------------------------------------------------------");
 
         try{
             getComponents().initFarmlands();
@@ -146,14 +145,22 @@ public class EvoPlugin extends JavaPlugin {
             log.log(Level.WARNING, ChatColor.YELLOW + "Disabling Farmlands module, Farmlands undetected.");
         }
 
-        econ = new Economy(this);
-        econ.setup();
+        log.log(Level.INFO,ChatColor.DARK_GREEN + "-------------------------------------------------------------------");
+
+        try{
+            econ = new Economy(this);
+        }catch(Exception e){
+            log.log(Level.SEVERE, ChatColor.RED + "Failed Load economy module FATAL Disabling not tranquillou bidou...");
+            getPluginLoader().disablePlugin(this);
+        }
+
+        log.log(Level.INFO,ChatColor.DARK_GREEN + "-------------------------------------------------------------------");
 
         try{
             log.log(Level.INFO, ChatColor.YELLOW + "trying to connect websocket to evolium.fr");
             Client.LaunchSocket();
-        }catch (UnknownHostException | ConnectException e ){
-            log.log(Level.SEVERE, ChatColor.RED + "Failed to start websockets, EvoPlugin will not take care of web infos");
+        }catch (UnknownHostException | ConnectException | NoClassDefFoundError e ){
+            log.log(Level.SEVERE, ChatColor.RED + "Failed to start websockets, EvoPlugin will not take care of web infos cause: " + e.getCause());
         }
     }
 
@@ -176,6 +183,8 @@ public class EvoPlugin extends JavaPlugin {
 
     public void setCommands(){
         getCommand("exp").setExecutor(new ExpExecutor());
+        getCommand("periode").setExecutor(new PeriodExecutor());
+        getCommand("money").setExecutor(new EconExecutor());
         getCommand("farmzone").setExecutor(new FarmzoneExecutor());
         getCommand("rtp").setExecutor(new RTPExecutor());
         log.log(Level.INFO,ChatColor.GREEN + "Commands modules Enabled");
@@ -187,6 +196,7 @@ public class EvoPlugin extends JavaPlugin {
         pm.registerEvents(new BlockManager(), this);
         pm.registerEvents(new CraftManager(), this);
         pm.registerEvents(new DamageManager(), this);
+        pm.registerEvents(new InventoryManager(), this);
         log.log(Level.INFO,ChatColor.GREEN + "Listeners modules Enabled");
     }
 

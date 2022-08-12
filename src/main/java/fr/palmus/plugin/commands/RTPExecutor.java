@@ -1,5 +1,6 @@
 package fr.palmus.plugin.commands;
 
+import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.utils.Utils;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -16,6 +17,8 @@ import java.util.List;
 
 public class RTPExecutor implements CommandExecutor {
 
+    EvoPlugin main = EvoPlugin.getInstance();
+
     private static final int MIN = 500;
     private static final int MAX = 5000;
 
@@ -29,7 +32,7 @@ public class RTPExecutor implements CommandExecutor {
             Location locPlayer = player.getLocation();
             World world = locPlayer.getWorld();
 
-            player.sendMessage("Téléportation en cours...");
+            player.sendMessage(main.getComponents().getPrefix("") + "Téléportation en cours...");
             //si j'atteri dans l'eau ou lave je restart
             Location loc = getTeleportLoc(world);
             while(world.getBlockAt(getLocUnder(loc)).getType().toString().equals("WATER") || world.getBlockAt(getLocUnder(loc)).getType().toString().equals("LAVA")){

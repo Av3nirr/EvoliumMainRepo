@@ -3,11 +3,13 @@ package fr.palmus.plugin.components;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sun.tools.javac.Main;
 import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.utils.CustomItem;
 import fr.palmus.plugin.utils.ItemBuilder;
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
+import net.luckperms.api.model.user.User;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -16,12 +18,18 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Cette classe rescense toutes les fonctions utiles pour éviter
@@ -201,24 +209,23 @@ public class EvoComponent {
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         PlayerManager plm = EvoPlugin.getInstance().plmList.get(pl);
         int limiter =  plm.getLimiter();
-
-        /** TODO
-         * User user = Main.getInstance().LPapi.getPlayerAdapter(Player.class).getUser(pl);
-         * prefix = user.getCachedData().getMetaData().getPrefix().replace("&", "§");
-          */
-
+        User user = EvoPlugin.getInstance().LPapi.getPlayerAdapter(Player.class).getUser(pl);
+        String prefix = user.getCachedData().getMetaData().getPrefix().replace("&", "§").toString().replace('"', ' ');
         String period = EvoPlugin.getInstance().getComponents().getPeriod(plm.getPeriod());
+        int money = main.econ.getPlayerEcon(pl).getMoney();
+        int bank = main.econ.getPlayerEcon(pl).getBank();
 
-        obj.getScore( "§7").setScore(11);
-        obj.getScore( "      §7+-----§2Époque§7-----+").setScore(10);
-        obj.getScore( "§aPériode actuel: §2" + period + " " + plm.getPeriodLimitStyleBar(limiter)).setScore(9);
-        obj.getScore( "§aPoint d'Expérience: §2" + plm.getStringExp(plm.getExp())  + "/" + plm.getPeriodLimitStyle(limiter)).setScore(8);
-        obj.getScore( "§aObjectifs: §2").setScore(7);
-        obj.getScore( " §6").setScore(6);
-        obj.getScore( "      §7+-----§6Infos§7------+").setScore(5);
-        obj.getScore( "§ePseudo: §6" + pl.getDisplayName()).setScore(4);
-        obj.getScore( "§eGrade: §6").setScore(3); // TODO
-        obj.getScore( "§eArgent: §6").setScore(2); // TODO
+        obj.getScore( "§7").setScore(12);
+        obj.getScore( "      §7+-----§2Époque§7-----+").setScore(11);
+        obj.getScore( "§aPériode actuel: §2" + period + " " + plm.getPeriodLimitStyleBar(limiter)).setScore(10);
+        obj.getScore( "§aPoint d'Expérience: §2" + plm.getStringExp(plm.getExp())  + "/" + plm.getPeriodLimitStyle(limiter)).setScore(9);
+        obj.getScore( "§aObjectifs: §2").setScore(8);
+        obj.getScore( " §6").setScore(7);
+        obj.getScore( "      §7+-----§6Infos§7------+").setScore(6);
+        obj.getScore( "§ePseudo: §6" + pl.getDisplayName()).setScore(5);
+        obj.getScore( "§eGrade: §6" + prefix).setScore(4);
+        obj.getScore( "§eArgent: §6" + money).setScore(3);
+        obj.getScore( "§eBanque: §6" + bank).setScore(2);
         obj.getScore( " ").setScore(1);
         obj.getScore( "§aplay.evolium.fr").setScore(0);
 
@@ -273,5 +280,53 @@ public class EvoComponent {
         recipie.setIngredient('*', CustomItem.fiber.getData());
 
         Bukkit.addRecipe(recipie);
+    }
+
+    public ItemStack getHead(Player player) {
+        boolean isNewVersion = Arrays.stream(Material.values()).map(Material::name).collect(Collectors.toList()).contains("PLAYER_HEAD");
+        Material type = Material.matchMaterial(isNewVersion ? "PLAYER_HEAD" : "SKULL_ITEM");
+        ItemStack item = new ItemStack(type, 1);
+        if(!isNewVersion){
+            item.setDurability((short) 3);
+        }
+        SkullMeta skull = (SkullMeta) item.getItemMeta();
+        skull.setOwner(player.getDisplayName());
+        skull.setDisplayName("§2§nInformations");
+        ArrayList<String> lore = new ArrayList<>(Arrays.asList("", "§aBienvenue §2" + player.getDisplayName() + " §asur","§ala page d'informations d'evolium", "§avous pouvez récupérer des informations","§aà propos de votre période", ""));
+        skull.setLore(lore);
+        skull.setOwner(player.getName());
+        item.setItemMeta(skull);
+
+        return item;
+    }
+
+    public String getProgressBar(Player pl){
+        int placement = main.plmList.get(pl).getExp() * 20 / main.plmList.get(pl).getPeriodLimit(main.plmList.get(pl).getLimiter());
+        StringBuilder str = new StringBuilder("||||||||||||||||||||");
+        str.insert(placement, "§e");
+        str.insert(0, "§6");
+        return str.toString();
+    }
+
+    public int getProgressPercent(Player pl){
+        int percent = main.plmList.get(pl).getExp() * 100 / main.plmList.get(pl).getPeriodLimit(main.plmList.get(pl).getLimiter());
+        return percent;
+    }
+
+    public void initInfoInventory(Inventory inv, Player pl){
+
+        setDefaultMaterial(inv, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack());
+
+        for(int i = 0; i < 9; i++){
+            inv.setItem(i, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).toItemStack());
+        }
+
+        for(int i = 45 - 9; i < 45; i++){
+            inv.setItem(i, new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE).toItemStack());
+        }
+
+        inv.setItem(4, getHead(pl));
+        inv.setItem(inv.getSize() - 5, new ItemBuilder(Material.BARRIER).setName("§cFermer").addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack());
+        inv.setItem(22, new ItemBuilder(Material.EXPERIENCE_BOTTLE, 1).addEnchant(Enchantment.DURABILITY, 1).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).addItemFlag(ItemFlag.HIDE_ENCHANTS).setName("§6Comment exp ?").setLore(new ArrayList<>(Arrays.asList("", "§eCliquez pour voir vos différents", "§eMoyens de gagner de l'éxperience", "", "§6Avancement actuel:","", getProgressBar(pl), "§6" + getProgressPercent(pl) + "§e%",""))).toItemStack());
     }
 }

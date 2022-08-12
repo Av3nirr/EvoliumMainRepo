@@ -32,8 +32,8 @@ public class JoinQuitManager implements Listener {
         if(pl.isOp()){
             pl.setGameMode(GameMode.CREATIVE);
         }
-        main.getComponents().createScoreboard(pl);
         main.econ.initPlayerEcon(pl);
+        main.getComponents().createScoreboard(pl);
     }
 
     @EventHandler

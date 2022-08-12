@@ -23,7 +23,8 @@ public class ExpExecutor implements CommandExecutor {
 
         Player pl = (Player) sender;
 
-        if(!pl.isOp()){
+        if(!pl.hasPermission("evoplugin.exp_mod")){
+            pl.sendMessage(main.getComponents().getPrefix("") + "Vous n'avez pas la permission d'utiliser cette commande, si vous souhaitez obtenir des informations à propos des périodes vous pouvez utiliser le §6/periode");
             return false;
         }
 
