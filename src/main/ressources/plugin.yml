@@ -10,7 +10,10 @@ depend:
   - WorldEdit
 commands:
   exp:
-    description: Intéragir avec le plugin d'exp
+    description: Intéragir avec le module d'exp
     default: op
   farmzone:
+    description: Intéragir avec le module farmlands
+  rtp:
+    description: Téléporte le joueur aléatoirement
 

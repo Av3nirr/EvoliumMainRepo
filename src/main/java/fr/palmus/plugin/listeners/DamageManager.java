@@ -1,19 +1,16 @@
 package fr.palmus.plugin.listeners;
 
-import fr.palmus.plugin.Main;
+import fr.palmus.plugin.EvoPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import javax.swing.text.PlainDocument;
-
 public class DamageManager implements Listener {
 
-    Main main = Main.getInstance();
+    EvoPlugin main = EvoPlugin.getInstance();
 
     @EventHandler
     public void onDeath(EntityDeathEvent e){

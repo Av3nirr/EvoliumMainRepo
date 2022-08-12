@@ -7,14 +7,17 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.palmus.plugin.commands.ExpExecutor;
 import fr.palmus.plugin.commands.FarmzoneExecutor;
+import fr.palmus.plugin.commands.RTPExecutor;
 import fr.palmus.plugin.components.EvoComponent;
 import fr.palmus.plugin.components.MobManager;
 import fr.palmus.plugin.components.PlayerManager;
+import fr.palmus.plugin.economy.Economy;
 import fr.palmus.plugin.listeners.BlockManager;
 import fr.palmus.plugin.listeners.CraftManager;
 import fr.palmus.plugin.listeners.DamageManager;
 import fr.palmus.plugin.listeners.JoinQuitManager;
 import fr.palmus.plugin.utils.CustomItem;
+import fr.palmus.plugin.websockets.Client;
 import net.coreprotect.CoreProtectAPI;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -36,6 +39,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,9 +49,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Main extends JavaPlugin {
+public class EvoPlugin extends JavaPlugin {
 
-    private static Main INSTANCE;
+    private static EvoPlugin INSTANCE;
 
     private EvoComponent storage;
 
@@ -62,9 +67,7 @@ public class Main extends JavaPlugin {
 
     public boolean FarmlandsModules;
 
-    public BlockVector2 preRegion1;
-    public BlockVector2 preRegion2;
-    RegionContainer container;
+    public Economy econ;
 
     private ScheduledExecutorService executorMonoThread;
     private ScheduledExecutorService scheduledExecutorService;
@@ -73,12 +76,8 @@ public class Main extends JavaPlugin {
     public FileConfiguration cfg;
 
     Plugin plugin = Bukkit.getPluginManager().getPlugin("Craftconomy3");
-    //public static Common craftconomy;
 
     RegisteredServiceProvider<LuckPerms> provider;
-    int entities;
-
-
 
     @Override
     public void onEnable() {
@@ -112,7 +111,7 @@ public class Main extends JavaPlugin {
 
         Plugin WG = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
         if (WG != null) {
-            container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            getComponents().container = WorldGuard.getInstance().getPlatform().getRegionContainer();
             log.log(Level.INFO,ChatColor.GREEN + "WorldGuard Hooked !");
         }
 
@@ -136,54 +135,25 @@ public class Main extends JavaPlugin {
             LPapi = provider.getProvider();
             log.log(Level.INFO,ChatColor.GREEN + "LuckPerms Hooked !");
         }
-        Iterator<Recipe> it = getServer().recipeIterator();
-        Recipe recipe;
-        while (it.hasNext()) {
-            recipe = it.next();
-            if (recipe != null && recipe.getResult().getType() == null) {
-                it.remove();
-            }
-        }
 
-        NamespacedKey key = new NamespacedKey(this, "emerald_sword");
-
-        ShapedRecipe recipie = new ShapedRecipe(key, new ItemStack(Material.STRING));
-
-        recipie.shape("***");
-
-        recipie.setIngredient('*', CustomItem.fiber.getData());
-
-        Bukkit.addRecipe(recipie);
+        getComponents().initRecipies();
+        log.log(Level.INFO,ChatColor.YELLOW + "Initializing recipies...");
 
         try{
-            RegionManager regions = container.get((World) Bukkit.getWorld(getConfig().getString("farmlands.world")));
-            preRegion1 = regions.getRegion(getConfig().getString("farmlands.name.prehistoire")).getPoints().get(0);
-            preRegion2 = regions.getRegion(getConfig().getString("farmlands.name.prehistoire")).getPoints().get(1);
-            double xMiddle = (double) ((preRegion1.getBlockX() + preRegion2.getBlockX()) / 2);
-            double zMiddle = (double) (preRegion1.getBlockZ() + preRegion2.getBlockZ()) / 2;
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    entities = 0;
-                    for(Entity ent : Bukkit.getWorld(getConfig().getString("farmlands.world")).getEntities()){
-                        if(ent.getType() == EntityType.ZOMBIE || ent.getType() == EntityType.SKELETON){
-                            entities = entities + 1;
-                        }
-                    }
-                    if(entities >= 15){
-
-                    }else{
-                        System.out.println(entities);
-                        double xPos = ThreadLocalRandom.current().nextDouble(xMiddle, xMiddle + 1);
-                        double zPos = ThreadLocalRandom.current().nextDouble(zMiddle, zMiddle + 1);
-
-                        MobManager.spawnMob(xPos, zPos, Bukkit.getWorld(getConfig().getString("farmlands.world")));
-                    }
-                }
-            }, 0L, 300L);
+            getComponents().initFarmlands();
         }catch (NullPointerException e){
             FarmlandsModules = false;
-            log.warning(ChatColor.YELLOW + "Disabling Farmlands module, Farmlands undetected.");
+            log.log(Level.WARNING, ChatColor.YELLOW + "Disabling Farmlands module, Farmlands undetected.");
+        }
+
+        econ = new Economy(this);
+        econ.setup();
+
+        try{
+            log.log(Level.INFO, ChatColor.YELLOW + "trying to connect websocket to evolium.fr");
+            Client.LaunchSocket();
+        }catch (UnknownHostException | ConnectException e ){
+            log.log(Level.SEVERE, ChatColor.RED + "Failed to start websockets, EvoPlugin will not take care of web infos");
         }
     }
 
@@ -192,6 +162,7 @@ public class Main extends JavaPlugin {
         saveDefaultConfig();
         for(Player pl : playerExp){
             plmList.get(pl).saveExp();
+            econ.getPlayerEcon(pl).saveMoney();
         }
         try {
             cfg.save(file);
@@ -206,6 +177,7 @@ public class Main extends JavaPlugin {
     public void setCommands(){
         getCommand("exp").setExecutor(new ExpExecutor());
         getCommand("farmzone").setExecutor(new FarmzoneExecutor());
+        getCommand("rtp").setExecutor(new RTPExecutor());
         log.log(Level.INFO,ChatColor.GREEN + "Commands modules Enabled");
     }
 
@@ -222,7 +194,7 @@ public class Main extends JavaPlugin {
         return storage;
     }
 
-    public static Main getInstance(){
+    public static EvoPlugin getInstance(){
         return INSTANCE;
     }
 

@@ -1,6 +1,6 @@
 package fr.palmus.plugin.listeners;
 
-import fr.palmus.plugin.Main;
+import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.components.PlayerManager;
 import fr.palmus.plugin.utils.CustomItem;
 import org.bukkit.GameMode;
@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class BlockManager implements Listener {
 
-    Main main = Main.getInstance();
+    EvoPlugin main = EvoPlugin.getInstance();
 
     @EventHandler
     public void onBreak(BlockBreakEvent e){

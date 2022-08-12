@@ -1,6 +1,6 @@
 package fr.palmus.plugin.commands;
 
-import fr.palmus.plugin.Main;
+import fr.palmus.plugin.EvoPlugin;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class FarmzoneExecutor implements CommandExecutor {
 
-    Main main = Main.getInstance();
+    EvoPlugin main = EvoPlugin.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

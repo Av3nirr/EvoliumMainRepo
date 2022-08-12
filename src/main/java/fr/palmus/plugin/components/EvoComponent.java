@@ -1,23 +1,27 @@
 package fr.palmus.plugin.components;
 
-import fr.palmus.plugin.Main;
+import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import fr.palmus.plugin.EvoPlugin;
+import fr.palmus.plugin.utils.CustomItem;
 import fr.palmus.plugin.utils.ItemBuilder;
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
-import net.luckperms.api.model.user.User;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Cette classe rescense toutes les fonctions utiles pour éviter
@@ -25,14 +29,19 @@ import java.util.HashMap;
  */
 public class EvoComponent {
 
-    Main main = Main.getInstance();
+    EvoPlugin main = EvoPlugin.getInstance();
 
     public HashMap<Material, Integer> prehistoire;
 
     public HashMap<Material, Integer> prehistoireCraft;
 
+    int entities;
 
     public HashMap<String, Integer> prehistoireKill;
+
+    public BlockVector2 preRegion1;
+    public BlockVector2 preRegion2;
+    public RegionContainer container;
 
     public void InitHashmap(){
         if(main.FarmlandsModules){
@@ -190,7 +199,7 @@ public class EvoComponent {
         Scoreboard board = manager.getNewScoreboard();
         Objective obj = board.registerNewObjective("EvoScoreboard", "dummy", "§dEVOLIUM");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        PlayerManager plm = Main.getInstance().plmList.get(pl);
+        PlayerManager plm = EvoPlugin.getInstance().plmList.get(pl);
         int limiter =  plm.getLimiter();
 
         /** TODO
@@ -198,7 +207,7 @@ public class EvoComponent {
          * prefix = user.getCachedData().getMetaData().getPrefix().replace("&", "§");
           */
 
-        String period = Main.getInstance().getComponents().getPeriod(plm.getPeriod());
+        String period = EvoPlugin.getInstance().getComponents().getPeriod(plm.getPeriod());
 
         obj.getScore( "§7").setScore(11);
         obj.getScore( "      §7+-----§2Époque§7-----+").setScore(10);
@@ -214,5 +223,55 @@ public class EvoComponent {
         obj.getScore( "§aplay.evolium.fr").setScore(0);
 
         pl.setScoreboard(board);
+    }
+
+    public void initFarmlands(){
+        RegionManager regions = container.get((com.sk89q.worldedit.world.World) Bukkit.getWorld(main.getConfig().getString("farmlands.world")));
+        preRegion1 = regions.getRegion(main.getConfig().getString("farmlands.name.prehistoire")).getPoints().get(0);
+        preRegion2 = regions.getRegion(main.getConfig().getString("farmlands.name.prehistoire")).getPoints().get(1);
+        double xMiddle = (double) ((preRegion1.getBlockX() + preRegion2.getBlockX()) / 2);
+        double zMiddle = (double) (preRegion1.getBlockZ() + preRegion2.getBlockZ()) / 2;
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(main, new Runnable() {
+            @Override
+            public void run() {
+                entities = 0;
+                for(Entity ent : Bukkit.getWorld(main.getConfig().getString("farmlands.world")).getEntities()){
+                    if(ent.getType() == EntityType.ZOMBIE || ent.getType() == EntityType.SKELETON){
+                        entities = entities + 1;
+                    }
+                }
+                if(entities >= 15){
+
+                }else{
+                    System.out.println(entities);
+                    double xPos = ThreadLocalRandom.current().nextDouble(xMiddle, xMiddle + 1);
+                    double zPos = ThreadLocalRandom.current().nextDouble(zMiddle, zMiddle + 1);
+
+                    MobManager.spawnMob(xPos, zPos, Bukkit.getWorld(main.getConfig().getString("farmlands.world")));
+                }
+            }
+        }, 0L, 300L);
+    }
+
+    @Deprecated
+    public void initRecipies(){
+        Iterator<Recipe> it = main.getServer().recipeIterator();
+        Recipe recipe;
+        while (it.hasNext()) {
+            recipe = it.next();
+            if (recipe != null && recipe.getResult().getType() == null) {
+                it.remove();
+            }
+        }
+
+        NamespacedKey key = new NamespacedKey(main, "emerald_sword");
+
+        ShapedRecipe recipie = new ShapedRecipe(key, new ItemStack(Material.STRING));
+
+        recipie.shape("***");
+
+        recipie.setIngredient('*', CustomItem.fiber.getData());
+
+        Bukkit.addRecipe(recipie);
     }
 }

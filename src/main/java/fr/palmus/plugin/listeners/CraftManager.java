@@ -1,19 +1,16 @@
 package fr.palmus.plugin.listeners;
 
-import fr.palmus.plugin.Main;
-import fr.palmus.plugin.components.PlayerManager;
-import fr.palmus.plugin.utils.CustomItem;
+import fr.palmus.plugin.EvoPlugin;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class CraftManager implements Listener {
 
-    Main main = Main.getInstance();
+    EvoPlugin main = EvoPlugin.getInstance();
 
     @EventHandler
     public void onCraft(CraftItemEvent e){

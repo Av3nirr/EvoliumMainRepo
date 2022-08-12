@@ -1,7 +1,8 @@
 package fr.palmus.plugin.listeners;
 
-import fr.palmus.plugin.Main;
+import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.components.PlayerManager;
+import fr.palmus.plugin.economy.Economy;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +14,7 @@ import java.io.IOException;
 
 public class JoinQuitManager implements Listener {
 
-    Main main = Main.getInstance();
+    EvoPlugin main = EvoPlugin.getInstance();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) throws IOException {
@@ -32,6 +33,7 @@ public class JoinQuitManager implements Listener {
             pl.setGameMode(GameMode.CREATIVE);
         }
         main.getComponents().createScoreboard(pl);
+        main.econ.initPlayerEcon(pl);
     }
 
     @EventHandler

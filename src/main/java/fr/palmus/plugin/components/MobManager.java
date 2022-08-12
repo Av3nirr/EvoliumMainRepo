@@ -1,6 +1,6 @@
 package fr.palmus.plugin.components;
 
-import fr.palmus.plugin.Main;
+import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.utils.ItemBuilder;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -18,7 +18,7 @@ public class MobManager {
     }
 
     public static void spawnMob(double x, double z, World world){
-        if(!Main.getInstance().FarmlandsModules){
+        if(!EvoPlugin.getInstance().FarmlandsModules){
             return;
         }
         double xCo = x;

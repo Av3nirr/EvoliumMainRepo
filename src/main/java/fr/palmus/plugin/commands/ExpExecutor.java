@@ -1,7 +1,7 @@
 package fr.palmus.plugin.commands;
 
 
-import fr.palmus.plugin.Main;
+import fr.palmus.plugin.EvoPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class ExpExecutor implements CommandExecutor {
 
-    Main main = Main.getInstance();
+    EvoPlugin main = EvoPlugin.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

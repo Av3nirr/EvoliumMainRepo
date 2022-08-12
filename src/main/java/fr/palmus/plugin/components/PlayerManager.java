@@ -1,6 +1,6 @@
 package fr.palmus.plugin.components;
 
-import fr.palmus.plugin.Main;
+import fr.palmus.plugin.EvoPlugin;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class PlayerManager {
 
-    Main main = Main.getInstance();
+    EvoPlugin main = EvoPlugin.getInstance();
 
     private Player pl;
 
@@ -79,16 +79,16 @@ public class PlayerManager {
     }
 
     public int getLimiter(){
-        if(Main.getInstance().cfg.get(pl.getDisplayName() + ".rank") == null){
+        if(EvoPlugin.getInstance().cfg.get(pl.getDisplayName() + ".rank") == null){
             main.cfg.set(pl.getDisplayName() + ".limiter", 0);
             return 0;
         }
-        int limiter =  Main.getInstance().cfg.getInt(pl.getDisplayName() + ".rank");
+        int limiter =  EvoPlugin.getInstance().cfg.getInt(pl.getDisplayName() + ".rank");
         return limiter;
     }
 
     public String getLimiterStyle(){
-        int i =  Main.getInstance().cfg.getInt(pl.getDisplayName() + ".rank");
+        int i =  EvoPlugin.getInstance().cfg.getInt(pl.getDisplayName() + ".rank");
         if(i == 1){
             return "I";
         }
@@ -117,7 +117,6 @@ public class PlayerManager {
 
     public void saveExp(){
         main.cfg.set(pl.getDisplayName() + ".exp", getExp());
-        //save
     }
 
     public int getExp(){
