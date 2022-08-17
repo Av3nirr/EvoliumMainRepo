@@ -159,7 +159,7 @@ public class EvoPlugin extends JavaPlugin {
         try{
             log.log(Level.INFO, ChatColor.YELLOW + "trying to connect websocket to evolium.fr");
             Client.LaunchSocket();
-        }catch (UnknownHostException | ConnectException | NoClassDefFoundError e ){
+        }catch (UnknownHostException | ConnectException | NoClassDefFoundError | RuntimeException e ){
             log.log(Level.SEVERE, ChatColor.RED + "Failed to start websockets, EvoPlugin will not take care of web infos cause: " + e.getCause());
         }
     }
