@@ -359,11 +359,21 @@ public class EvoComponent {
         if (value != null) {
             return value.replace('&', '§');
         }
+
+        // si value != de null ce code ne sera jamais exécuté car la méthode aura déjà return a la ligne 360 et n'exécutera pas la suite
         value = this.defaults.getProperty(key);
         if (value != null) {
             return value.replace('&', '§');
         }
         return "§cAucun texte trouvé: '" + key + "'";
+    }
+
+    public static int getRandomNumber(int min, int max){
+        int nb;
+        nb = (int)Math.floor(Math.random()*(max-min+1)+min);
+        if(nb % 2 == 0)
+            nb = -nb;
+        return nb;
     }
 
     static {

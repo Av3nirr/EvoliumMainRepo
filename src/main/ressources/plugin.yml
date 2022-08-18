@@ -26,6 +26,8 @@ commands:
       - infos
       - periodes
       - period
+  bank:
+    description: Montre l'argent d'un joueur
 
 permissions:
   evoplugin.*:

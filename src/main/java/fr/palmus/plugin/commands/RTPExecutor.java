@@ -1,10 +1,8 @@
 package fr.palmus.plugin.commands;
 
 import fr.palmus.plugin.EvoPlugin;
-import fr.palmus.plugin.utils.Utils;
-import org.bukkit.Chunk;
+import fr.palmus.plugin.components.EvoComponent;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -33,16 +31,18 @@ public class RTPExecutor implements CommandExecutor {
             World world = locPlayer.getWorld();
 
             player.sendMessage(main.getComponents().getPrefix("") + "Téléportation en cours...");
-            //si j'atteri dans l'eau ou lave je restart
-            Location loc = getTeleportLoc(world);
-            while(world.getBlockAt(getLocUnder(loc)).getType().toString().equals("WATER") || world.getBlockAt(getLocUnder(loc)).getType().toString().equals("LAVA")){
-                loc = getTeleportLoc(world);
-            }
 
+            //si j'atteri dans l'eau ou lave je restart
+            //while(world.getBlockAt(getLocUnder(loc)).getType().toString().equals("WATER") || world.getBlockAt(getLocUnder(loc)).getType().toString().equals("LAVA")){
+            //    loc = getTeleportLoc(world);
+            //}
+
+
+            Location loc = getTeleportLoc(world);
             //load chunk
             world.getChunkAt(world.getBlockAt(loc)).load();
             player.teleport(loc);
-
+            return true;
         }
 
         return false;
@@ -50,19 +50,16 @@ public class RTPExecutor implements CommandExecutor {
 
     private Location getTeleportLoc(World world){
 
-        double x = Utils.getRandomNumber(MIN,MAX) + 0.5;
-        double y = 45;
-        double z = Utils.getRandomNumber(MIN,MAX)+ 0.5;
-        Location footLoc = new Location(world, x,y,z);
-        Location headLoc = new Location(world, x,y+1,z);
+        double x = EvoComponent.getRandomNumber(MIN,MAX);
+        double z = EvoComponent.getRandomNumber(MIN,MAX);
 
-        //je y++ jusqua ce que footLoc et headloc soit de l'air -> pas de tp dans les murs
-        while(world.getBlockAt(footLoc).getType().toString().compareTo("AIR") != 0 && world.getBlockAt(headLoc).getType().toString().compareTo("AIR") != 0){
-            y++;
-            footLoc = new Location(world, x,y,z);
-            headLoc = new Location(world, x,y+1,z);
-        }
-        return new Location(world,x,y+1,z);
+        Location loc = new Location(world,x,0,z);
+        Block block = world.getHighestBlockAt(loc);
+        double y = block.getY() + 1.5;
+
+        return new Location(world, x,y,z);
+
+
     }
 
     private Location getLocUnder(Location loc){
