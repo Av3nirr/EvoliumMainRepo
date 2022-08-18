@@ -1,5 +1,7 @@
 package fr.palmus.plugin.economy;
 
+import fr.palmus.plugin.listeners.custom.PlayerMoneyChangeEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class EconPlayerManager {
@@ -15,32 +17,44 @@ public class EconPlayerManager {
     public EconPlayerManager(Player pl, Economy economy) {
         this.player = pl;
         this.econ = economy;
-        this.bank = econ.main.cfg.getInt(player.getDisplayName() + ".bank");;
-        this.money = econ.main.cfg.getInt(player.getDisplayName() + ".money");;
+        this.bank = econ.main.cfg.getInt(player.getUniqueId() + ".bank");;
+        this.money = econ.main.cfg.getInt(player.getUniqueId() + ".money");;
     }
 
     public void addMoney(int money){
         this.money += money;
+        PlayerMoneyChangeEvent event = new PlayerMoneyChangeEvent(player, money, bank, TransferType.MONEY);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     public void substractMoney(int money){
         this.money -= money;
+        PlayerMoneyChangeEvent event = new PlayerMoneyChangeEvent(player, money, bank, TransferType.MONEY);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     public void setMoney(int money){
         this.money = money;
+        PlayerMoneyChangeEvent event = new PlayerMoneyChangeEvent(player, money, bank, TransferType.MONEY);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     public void addBank(int money){
         this.money += money;
+        PlayerMoneyChangeEvent event = new PlayerMoneyChangeEvent(player, money, bank, TransferType.BANK);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     public void substractBank(int money){
         this.money -= money;
+        PlayerMoneyChangeEvent event = new PlayerMoneyChangeEvent(player, money, bank, TransferType.BANK);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     public void setBank(int bank) {
         this.bank = bank;
+        PlayerMoneyChangeEvent event = new PlayerMoneyChangeEvent(player, money, bank, TransferType.BANK);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     public void saveMoney(){
@@ -57,5 +71,9 @@ public class EconPlayerManager {
 
     public int getBank() {
         return bank;
+    }
+
+    public enum TransferType{
+        BANK, MONEY;
     }
 }

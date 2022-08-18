@@ -68,7 +68,6 @@ public class EvoPlugin extends JavaPlugin {
         INSTANCE = this;
         storage = new EvoComponent();
         setCommands();
-        setListeners();
         log.log(Level.INFO,ChatColor.GREEN + "Initialised !");
 
         getComponents().initHashmap();
@@ -109,6 +108,7 @@ public class EvoPlugin extends JavaPlugin {
             LPapi = provider.getProvider();
             log.log(Level.INFO,ChatColor.GREEN + "LuckPerms Hooked !");
         }
+        setListeners();
         log.log(Level.INFO,ChatColor.DARK_GREEN + "-------------------------------------------------------------------");
 
         log.log(Level.WARNING,ChatColor.YELLOW + "Initializing recipies, this may take a few minutes because of Legacy intitialization");
@@ -194,7 +194,7 @@ public class EvoPlugin extends JavaPlugin {
         pm.registerEvents(new CraftManager(), this);
         pm.registerEvents(new DamageManager(), this);
         pm.registerEvents(new InventoryManager(), this);
-        pm.registerEvents(new PeriodManager(), this);
+        pm.registerEvents(new ScoreboardUpdater(this, LPapi), this);
         log.log(Level.INFO,ChatColor.GREEN + "Listeners modules Enabled");
     }
 

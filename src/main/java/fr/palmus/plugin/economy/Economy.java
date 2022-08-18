@@ -1,14 +1,13 @@
 package fr.palmus.plugin.economy;
 
 import fr.palmus.plugin.EvoPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -45,13 +44,13 @@ public class Economy {
         return econManagement.get(pl);
     }
 
-    public void initPlayerEcon(Player pl){
+    public void initPlayerEcon(Player pl) throws IOException {
 
         if(!cfg.contains(pl.getDisplayName())){
-            cfg.set(pl.getDisplayName() + ".money", 0);
-            cfg.set(pl.getDisplayName() + ".bank", 0);
+            cfg.set(pl.getUniqueId() + ".money", 0);
+            cfg.set(pl.getUniqueId() + ".bank", 0);
+            cfg.save(this.file);
         }
-
         econManagement.put(pl, new EconPlayerManager(pl, this));
     }
 }

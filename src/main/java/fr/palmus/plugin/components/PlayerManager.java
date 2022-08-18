@@ -49,6 +49,8 @@ public class PlayerManager {
             Bukkit.getServer().getPluginManager().callEvent(event);
             return;
         }
+        PlayerExpChangeEvent event = new PlayerExpChangeEvent(pl, experience,ExpAction.ADD);
+        Bukkit.getServer().getPluginManager().callEvent(event);
         pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§5§kII§r §d+§5" + exp + " §davancement: §5" + getExp() + "§7/§5" + getPeriodLimitStyle(getLimiter()) + " §r§5§kII"));
     }
 
