@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="EvoPlugin:jar">
+    <output-path>$PROJECT_DIR$/../server/plugins</output-path>
+    <root id="archive" name="EvoPlugin.jar">
+      <element id="module-output" name="EvoPlugin" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/glassfish/tyrus/tyrus-spi/1.8.3/tyrus-spi-1.8.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/jcache/jcache/1.0-dev-2/jcache-1.0-dev-2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/glassfish/tyrus/tyrus-client/1.8.3/tyrus-client-1.8.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/javax/websocket/javax.websocket-api/1.0-rc5/javax.websocket-api-1.0-rc5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/glassfish/tyrus/tyrus-core/1.8.3/tyrus-core-1.8.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/glassfish/tyrus/tyrus-container-jdk-client/1.8.3/tyrus-container-jdk-client-1.8.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
