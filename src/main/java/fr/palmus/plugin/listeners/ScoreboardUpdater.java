@@ -7,12 +7,8 @@ import fr.palmus.plugin.listeners.custom.PlayerPeriodChangeEvent;
 import fr.palmus.plugin.utils.fastboard.FastBoard;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
-import net.luckperms.api.event.LuckPermsEvent;
-import net.luckperms.api.event.log.LogPublishEvent;
 import net.luckperms.api.event.node.NodeAddEvent;
 import net.luckperms.api.event.node.NodeRemoveEvent;
-import net.luckperms.api.event.user.UserLoadEvent;
-import net.luckperms.api.event.user.track.UserPromoteEvent;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -38,21 +34,21 @@ public class ScoreboardUpdater implements Listener {
     @EventHandler
     public void onPeriodChange(PlayerPeriodChangeEvent e){
         for (FastBoard board : main.getComponents().boards.values()) {
-            main.getComponents().updateBoard(board, e.getPlayer());
+            main.getComponents().updateBoard(e.getPlayer());
         }
     }
 
     @EventHandler
     public void onExpChange(PlayerExpChangeEvent e){
         for (FastBoard board : main.getComponents().boards.values()) {
-            main.getComponents().updateBoard(board, e.getPlayer());
+            main.getComponents().updateBoard(e.getPlayer());
         }
     }
 
     @EventHandler
     public void onMoneyChange(PlayerMoneyChangeEvent e){
         for (FastBoard board : main.getComponents().boards.values()) {
-            main.getComponents().updateBoard(board, e.getPlayer());
+            main.getComponents().updateBoard(e.getPlayer());
         }
     }
 
@@ -62,7 +58,7 @@ public class ScoreboardUpdater implements Listener {
         }
         User target = (User) e.getTarget();
         for (FastBoard board : main.getComponents().boards.values()) {
-            main.getComponents().updateBoard(board, Bukkit.getPlayer(target.getUniqueId()));
+            main.getComponents().updateBoard(Bukkit.getPlayer(target.getUniqueId()));
         }
     }
 
@@ -72,7 +68,7 @@ public class ScoreboardUpdater implements Listener {
         }
         User target = (User) e.getTarget();
         for (FastBoard board : main.getComponents().boards.values()) {
-            main.getComponents().updateBoard(board, Bukkit.getPlayer(target.getUniqueId()));
+            main.getComponents().updateBoard(Bukkit.getPlayer(target.getUniqueId()));
         }
     }
 }

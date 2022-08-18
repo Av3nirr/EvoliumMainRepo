@@ -26,10 +26,8 @@ public class MobManager {
         int choose = ThreadLocalRandom.current().nextInt(1, 3);
         int yCo = world.getHighestBlockYAt((int)x, (int)z);
         Location location = new Location(world, xCo, yCo, zCo);
-        System.out.println("2");
         if(choose == 1){
             int number = ThreadLocalRandom.current().nextInt(1, 6);
-            System.out.println(number);
             for(int i = 1; i < number; i++){
                 int variation = ThreadLocalRandom.current().nextInt(1, 6);
 

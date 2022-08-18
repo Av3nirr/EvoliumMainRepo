@@ -39,10 +39,9 @@ public class JoinQuitManager implements Listener {
 
         board.updateTitle(ChatColor.RED + "Evolium");
 
-
         main.getComponents().boards.put(pl.getUniqueId(), board);
         for (FastBoard boarde : main.getComponents().boards.values()) {
-            main.getComponents().updateBoard(boarde, pl);
+            main.getComponents().updateBoard(pl);
         }
     }
 

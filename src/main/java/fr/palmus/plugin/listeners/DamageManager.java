@@ -20,7 +20,6 @@ public class DamageManager implements Listener {
 
         Player pl = e.getEntity().getKiller();
         Entity entity = e.getEntity();
-        System.out.println("ok");
         if(e.getEntity() instanceof Zombie || e.getEntity().getType() == EntityType.SKELETON && main.FarmlandsModules){
             e.setDroppedExp(0);
             e.getDrops().clear();

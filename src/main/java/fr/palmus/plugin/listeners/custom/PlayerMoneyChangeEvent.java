@@ -19,7 +19,6 @@ public class PlayerMoneyChangeEvent extends Event implements Cancellable {
     private boolean isCancelled;
 
     public PlayerMoneyChangeEvent(Player pl, int money, int bank, EconPlayerManager.TransferType action){
-        System.out.println("g");
         this.player = pl;
         this.plm = EvoPlugin.getInstance().plmList.get(pl);
         this.action = action;

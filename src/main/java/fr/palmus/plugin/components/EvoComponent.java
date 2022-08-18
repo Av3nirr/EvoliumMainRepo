@@ -66,13 +66,20 @@ public class EvoComponent {
 
         prehistoire = new HashMap<Material, Integer>(){{
             put(Material.STONE, 3);
-            put(Material.LEGACY_WOOD, 2);
-            put(Material.LEGACY_LEAVES, 1);
-            put(Material.LEGACY_LEAVES_2, 1);
+            put(Material.ACACIA_LOG, 4);
+            put(Material.BIRCH_LOG, 4);
+            put(Material.DARK_OAK_LOG, 4);
+            put(Material.OAK_LOG, 4);
+            put(Material.JUNGLE_LOG, 4);
+            put(Material.SPRUCE_LOG, 4);
+            put(Material.OAK_LEAVES, 1);
+            put(Material.ACACIA_LEAVES, 1);
+            put(Material.BIRCH_LEAVES, 1);
+            put(Material.DARK_OAK_LEAVES, 1);
+            put(Material.JUNGLE_LEAVES, 1);
+            put(Material.SPRUCE_LEAVES, 1);
             put(Material.GRASS_BLOCK, 1);
             put(Material.DIRT, 1);
-            put(Material.LEGACY_LOG, 2);
-            put(Material.LEGACY_LOG_2, 2);
         }};
 
         prehistoireCraft = new HashMap<Material, Integer>(){{
@@ -207,7 +214,8 @@ public class EvoComponent {
         return CoreProtect;
     }
 
-    public void updateBoard(FastBoard board, Player pl) {
+    public void updateBoard(Player pl) {
+        FastBoard board = this.boards.get(pl.getUniqueId());
         PlayerManager plm = EvoPlugin.getInstance().plmList.get(pl);
         int limiter =  plm.getLimiter();
         User user = EvoPlugin.getInstance().LPapi.getPlayerAdapter(Player.class).getUser(pl);
@@ -263,7 +271,6 @@ public class EvoComponent {
                 if(entities >= 15){
 
                 }else{
-                    System.out.println(entities);
                     double xPos = ThreadLocalRandom.current().nextDouble(xMiddle, xMiddle + 1);
                     double zPos = ThreadLocalRandom.current().nextDouble(zMiddle, zMiddle + 1);
 
@@ -273,7 +280,6 @@ public class EvoComponent {
         }, 0L, 300L);
     }
 
-    @Deprecated
     public void initRecipies(){
         Iterator<Recipe> it = main.getServer().recipeIterator();
         Recipe recipe;

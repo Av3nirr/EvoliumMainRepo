@@ -71,10 +71,10 @@ public class EvoPlugin extends JavaPlugin {
         log.log(Level.INFO,ChatColor.GREEN + "Initialised !");
 
         getComponents().initHashmap();
-        System.out.println("[EvoPlugin] Components storage module loaded !");
+        log.log(Level.INFO,ChatColor.GREEN + "Components storage module loaded !");
 
         if (plugin != null) {
-            System.out.println("[EvoPlugin] Craftconomy Hooked !");
+            log.log(Level.INFO,ChatColor.GREEN + "Craftconomy Hooked !");
         }
 
         cfg = YamlConfiguration.loadConfiguration(file);
@@ -156,7 +156,7 @@ public class EvoPlugin extends JavaPlugin {
             }
             plmList.put(pl, new PlayerManager(pl, cfg.getInt(pl.getDisplayName() + ".exp")));
             for (FastBoard board : getComponents().boards.values()) {
-                getComponents().updateBoard(board, pl);
+                getComponents().updateBoard(pl);
             }
         }
     }

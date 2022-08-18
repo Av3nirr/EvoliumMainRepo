@@ -114,6 +114,8 @@ public class PlayerManager {
         main.cfg.set(pl.getDisplayName() + ".limiter", 0);
         main.cfg.set(pl.getDisplayName() + ".period", 0);
         main.cfg.save(main.file);
+        experience = 0;
+        period = 0;
         PlayerPeriodChangeEvent event = new PlayerPeriodChangeEvent(getPlayer(), main.cfg.getInt(pl.getDisplayName() + ".period"), getLimiter(), PeriodAction.RESET);
         Bukkit.getServer().getPluginManager().callEvent(event);    }
 
