@@ -1,7 +1,7 @@
 name: EvoPlugin
 author: Palmus_
 main: fr.palmus.plugin.EvoPlugin
-version: 2.1.0
+version: 2.2.3
 api-version: 1.18
 depend:
   - CoreProtect
@@ -14,6 +14,7 @@ commands:
     default: op
   farmzone:
     description: Intéragir avec le module farmlands
+    default: op
   rtp:
     description: Téléporte le joueur aléatoirement
   money:
@@ -24,6 +25,7 @@ commands:
       - info
       - infos
       - periodes
+      - period
 
 permissions:
   evoplugin.*:

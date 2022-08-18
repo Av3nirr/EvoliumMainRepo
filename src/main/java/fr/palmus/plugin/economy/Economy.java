@@ -24,16 +24,21 @@ public class Economy {
     public Economy(EvoPlugin main){
         this.main = main;
         setup();
+        main.log.log(Level.INFO, ChatColor.GREEN + "Economy module successfully load !");
     }
 
     public void setup(){
         main.log.log(Level.INFO, ChatColor.GOLD + "Starting Economy module...");
-        file = new File("plugins/EvoPlugin", "economy.yml");
+        if (file == null) {
+            file = new File("plugins/EvoPlugin", "economy.yml");
+        }
+        if (!file.exists()) {
+            main.saveResource("economy.yml", false);
+        }
         cfg = YamlConfiguration.loadConfiguration(file);
         main.log.log(Level.INFO, ChatColor.GOLD + "Economy config files loaded");
         econManagement = new HashMap<>();
         main.log.log(Level.INFO, ChatColor.GOLD + "Economy storage loaded");
-        main.log.log(Level.INFO, ChatColor.GREEN + "Economy module successfully load !");
     }
 
     public EconPlayerManager getPlayerEcon(Player pl){

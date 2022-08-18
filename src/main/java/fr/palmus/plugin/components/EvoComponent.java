@@ -3,10 +3,10 @@ package fr.palmus.plugin.components;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sun.tools.javac.Main;
 import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.utils.CustomItem;
 import fr.palmus.plugin.utils.ItemBuilder;
+import fr.palmus.plugin.utils.fastboard.FastBoard;
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
 import net.luckperms.api.model.user.User;
@@ -20,15 +20,14 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.Scoreboard;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -37,11 +36,17 @@ import java.util.stream.Collectors;
  */
 public class EvoComponent {
 
+    public final Map<UUID, FastBoard> boards = new HashMap<>();
+
     EvoPlugin main = EvoPlugin.getInstance();
 
     public HashMap<Material, Integer> prehistoire;
 
     public HashMap<Material, Integer> prehistoireCraft;
+
+    public File propertiesFile;
+    private static final Properties config;
+    private static final Properties defaults;
 
     int entities;
 
@@ -51,7 +56,7 @@ public class EvoComponent {
     public BlockVector2 preRegion2;
     public RegionContainer container;
 
-    public void InitHashmap(){
+    public void initHashmap(){
         if(main.FarmlandsModules){
             prehistoireKill = new HashMap<String, Integer>(){{
                 put("§eDésosseur", 75);
@@ -64,7 +69,7 @@ public class EvoComponent {
             put(Material.LEGACY_WOOD, 2);
             put(Material.LEGACY_LEAVES, 1);
             put(Material.LEGACY_LEAVES_2, 1);
-            put(Material.GRASS, 1);
+            put(Material.GRASS_BLOCK, 1);
             put(Material.DIRT, 1);
             put(Material.LEGACY_LOG, 2);
             put(Material.LEGACY_LOG_2, 2);
@@ -85,14 +90,14 @@ public class EvoComponent {
     public String getPrefix(String type){
 
         if(type.equalsIgnoreCase("error")){
-            return "§4[§cEvolium§4]§r §l§7| §c";
+            return this.getString("prefix.error").replace('&', '§');
         }
 
         if(type.equalsIgnoreCase("ok")){
-            return "§2[§aEvolium§2]§r §l§7| §a";
+            return this.getString("prefix.good").replace('&', '§');
         }
 
-        return "§5[§dEvolium§5]§r §l§7| §d";
+        return this.getString("prefix.ok").replace('&', '§');
     }
 
     /**
@@ -202,11 +207,7 @@ public class EvoComponent {
         return CoreProtect;
     }
 
-    public void createScoreboard(Player pl){
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard board = manager.getNewScoreboard();
-        Objective obj = board.registerNewObjective("EvoScoreboard", "dummy", "§dEVOLIUM");
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+    public void updateBoard(FastBoard board, Player pl) {
         PlayerManager plm = EvoPlugin.getInstance().plmList.get(pl);
         int limiter =  plm.getLimiter();
         User user = EvoPlugin.getInstance().LPapi.getPlayerAdapter(Player.class).getUser(pl);
@@ -214,22 +215,34 @@ public class EvoComponent {
         String period = EvoPlugin.getInstance().getComponents().getPeriod(plm.getPeriod());
         int money = main.econ.getPlayerEcon(pl).getMoney();
         int bank = main.econ.getPlayerEcon(pl).getBank();
+        board.updateTitle(ChatColor.GOLD + "Evolium");
+        board.updateLines(
+                "§7",
+                "         §7+-----§2Époque§7-----+",
+                "§aPériode actuelle: §2" + period + " " + plm.getPeriodLimitStyleBar(limiter),
+                "§aPoints d'Expérience: §2" + plm.getStringExp(plm.getExp())  + "/" + plm.getPeriodLimitStyle(limiter),
+                "§aObjectifs: §2",
+                " §6",
+                "         §7+-----§6Infos§7------+",
+                "§ePseudo: §6" + pl.getDisplayName(),
+                "§eGrade: §6" + prefix,
+                "§eArgent: §6" + money,
+                "§eBanque: §6" + bank,
+                " ",
+                "         §aplay.evolium.fr"
+        );
+    }
 
-        obj.getScore( "§7").setScore(12);
-        obj.getScore( "      §7+-----§2Époque§7-----+").setScore(11);
-        obj.getScore( "§aPériode actuel: §2" + period + " " + plm.getPeriodLimitStyleBar(limiter)).setScore(10);
-        obj.getScore( "§aPoint d'Expérience: §2" + plm.getStringExp(plm.getExp())  + "/" + plm.getPeriodLimitStyle(limiter)).setScore(9);
-        obj.getScore( "§aObjectifs: §2").setScore(8);
-        obj.getScore( " §6").setScore(7);
-        obj.getScore( "      §7+-----§6Infos§7------+").setScore(6);
-        obj.getScore( "§ePseudo: §6" + pl.getDisplayName()).setScore(5);
-        obj.getScore( "§eGrade: §6" + prefix).setScore(4);
-        obj.getScore( "§eArgent: §6" + money).setScore(3);
-        obj.getScore( "§eBanque: §6" + bank).setScore(2);
-        obj.getScore( " ").setScore(1);
-        obj.getScore( "§aplay.evolium.fr").setScore(0);
+    public enum ScoreboardUpdate{
+        PERIOD, EXP, OBJECTIFS, PSEUDO, GRADE, ARGENT, BANQUE;
+    }
 
-        pl.setScoreboard(board);
+    public void updateScoreboard(Player pl, ScoreboardUpdate type){
+        Scoreboard board = pl.getScoreboard();
+
+        if(type == ScoreboardUpdate.PERIOD){
+            board.getObjective("EvoScoreboard");
+        }
     }
 
     public void initFarmlands(){
@@ -328,5 +341,33 @@ public class EvoComponent {
         inv.setItem(4, getHead(pl));
         inv.setItem(inv.getSize() - 5, new ItemBuilder(Material.BARRIER).setName("§cFermer").addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack());
         inv.setItem(22, new ItemBuilder(Material.EXPERIENCE_BOTTLE, 1).addEnchant(Enchantment.DURABILITY, 1).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).addItemFlag(ItemFlag.HIDE_ENCHANTS).setName("§6Comment exp ?").setLore(new ArrayList<>(Arrays.asList("", "§eCliquez pour voir vos différents", "§eMoyens de gagner de l'éxperience", "", "§6Avancement actuel:","", getProgressBar(pl), "§6" + getProgressPercent(pl) + "§e%",""))).toItemStack());
+    }
+
+        public void load() throws IOException {
+        if (this.propertiesFile == null) {
+            this.propertiesFile = new File(main.getDataFolder(), "strings.properties");
+        }
+        if (!this.propertiesFile.exists()) {
+            main.saveResource("strings.properties", false);
+        }
+        this.config.load(new InputStreamReader(new FileInputStream(this.propertiesFile), "UTF-8"));
+        this.defaults.load(new InputStreamReader(main.getResource("strings.properties"), "UTF-8"));
+    }
+
+    public String getString(final String key) {
+        String value = this.config.getProperty(key);
+        if (value != null) {
+            return value.replace('&', '§');
+        }
+        value = this.defaults.getProperty(key);
+        if (value != null) {
+            return value.replace('&', '§');
+        }
+        return "§cAucun texte trouvé: '" + key + "'";
+    }
+
+    static {
+        config = new Properties();
+        defaults = new Properties();
     }
 }

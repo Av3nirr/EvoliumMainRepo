@@ -21,7 +21,7 @@ public class PeriodExecutor implements CommandExecutor {
 
         Player pl = (Player) sender;
 
-        Inventory inv = Bukkit.createInventory(pl, 45, "§eInformations");
+        Inventory inv = Bukkit.createInventory(pl, 45, main.getComponents().getString("inventory.info_name").replace('&', '§'));
 
         main.getComponents().initInfoInventory(inv, pl);
 

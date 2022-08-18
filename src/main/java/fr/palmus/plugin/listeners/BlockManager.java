@@ -36,13 +36,14 @@ public class BlockManager implements Listener {
             }
         }
 
-        if(type == Material.LEGACY_LONG_GRASS){
+        if(type == Material.TALL_GRASS || type == Material.GRASS){
             if(e.isCancelled()){
                 return;
             }
             int rdm = new Random().nextInt(100);
             if(rdm <= 5){
                 pl.getWorld().dropItemNaturally(e.getBlock().getLocation(), CustomItem.fiber);
+                plm.addExp(10);
             }
         }
     }

@@ -3,6 +3,8 @@ package fr.palmus.plugin.listeners;
 import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.components.PlayerManager;
 import fr.palmus.plugin.economy.Economy;
+import fr.palmus.plugin.utils.fastboard.FastBoard;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,11 +35,23 @@ public class JoinQuitManager implements Listener {
             pl.setGameMode(GameMode.CREATIVE);
         }
         main.econ.initPlayerEcon(pl);
-        main.getComponents().createScoreboard(pl);
+        FastBoard board = new FastBoard(pl);
+
+        board.updateTitle(ChatColor.RED + "Evolium");
+
+
+        main.getComponents().boards.put(pl.getUniqueId(), board);
+        for (FastBoard boarde : main.getComponents().boards.values()) {
+            main.getComponents().updateBoard(boarde, pl);
+        }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
-        Player pl = e.getPlayer();
+        FastBoard board = main.getComponents().boards.remove(e.getPlayer().getUniqueId());
+
+        if (board != null) {
+            board.delete();
+        }
     }
 }
