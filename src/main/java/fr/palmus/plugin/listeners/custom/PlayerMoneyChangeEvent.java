@@ -1,7 +1,7 @@
 package fr.palmus.plugin.listeners.custom;
 
 import fr.palmus.plugin.EvoPlugin;
-import fr.palmus.plugin.components.PlayerManager;
+import fr.palmus.plugin.player.PlayerPeriod;
 import fr.palmus.plugin.economy.EconPlayerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -11,16 +11,16 @@ import org.bukkit.event.HandlerList;
 public class PlayerMoneyChangeEvent extends Event implements Cancellable {
 
     private Player player;
-    private PlayerManager plm;
+    private PlayerPeriod plm;
     private EconPlayerManager.TransferType action;
     private int money;
     private int bank;
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
 
-    public PlayerMoneyChangeEvent(Player pl, int money, int bank, EconPlayerManager.TransferType action){
+    public PlayerMoneyChangeEvent(Player pl, int money, int bank, EconPlayerManager.TransferType action, EvoPlugin main){
         this.player = pl;
-        this.plm = EvoPlugin.getInstance().plmList.get(pl);
+        this.plm = main.getCustomPlayer().get(pl);
         this.action = action;
         this.money = money;
         this.bank = bank;
@@ -50,7 +50,7 @@ public class PlayerMoneyChangeEvent extends Event implements Cancellable {
         return player;
     }
 
-    public PlayerManager getPlayerManager() {
+    public PlayerPeriod getPlayerManager() {
         return plm;
     }
 

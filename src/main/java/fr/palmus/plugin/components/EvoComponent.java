@@ -4,7 +4,8 @@ import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.palmus.plugin.EvoPlugin;
-import fr.palmus.plugin.utils.CustomItem;
+import fr.palmus.plugin.player.PlayerPeriod;
+import fr.palmus.plugin.item.CustomItem;
 import fr.palmus.plugin.utils.ItemBuilder;
 import fr.palmus.plugin.utils.fastboard.FastBoard;
 import net.coreprotect.CoreProtect;
@@ -58,37 +59,9 @@ public class EvoComponent {
 
     public void initHashmap(){
         if(main.FarmlandsModules){
-            prehistoireKill = new HashMap<String, Integer>(){{
-                put("§eDésosseur", 75);
-                put("§eAffamé", 75);
-            }};
+
         }
 
-        prehistoire = new HashMap<Material, Integer>(){{
-            put(Material.STONE, 3);
-            put(Material.ACACIA_LOG, 4);
-            put(Material.BIRCH_LOG, 4);
-            put(Material.DARK_OAK_LOG, 4);
-            put(Material.OAK_LOG, 4);
-            put(Material.JUNGLE_LOG, 4);
-            put(Material.SPRUCE_LOG, 4);
-            put(Material.OAK_LEAVES, 1);
-            put(Material.ACACIA_LEAVES, 1);
-            put(Material.BIRCH_LEAVES, 1);
-            put(Material.DARK_OAK_LEAVES, 1);
-            put(Material.JUNGLE_LEAVES, 1);
-            put(Material.SPRUCE_LEAVES, 1);
-            put(Material.GRASS_BLOCK, 1);
-            put(Material.DIRT, 1);
-        }};
-
-        prehistoireCraft = new HashMap<Material, Integer>(){{
-            put(Material.STRING, 10);
-            put(Material.WOODEN_AXE, 25);
-            put(Material.WOODEN_HOE, 25);
-            put(Material.WOODEN_PICKAXE, 25);
-            put(Material.WOODEN_SWORD, 25);
-        }};
     }
 
     /**
@@ -165,38 +138,6 @@ public class EvoComponent {
         pl.setSaturation(20);
     }
 
-    public String getPeriod(int i){
-        if(i == 0){
-            return "Préhistoire";
-        }
-
-        if(i == 1){
-            return "Antiquité";
-        }
-
-        if(i == 2){
-            return "Moyen-Age";
-        }
-
-        if(i == 3){
-            return "Renaissance";
-        }
-
-        if(i == 4){
-            return "Industriel";
-        }
-
-        if(i == 5){
-            return "20s";
-        }
-
-        if(i == 6){
-            return "Dieux";
-        }
-
-        return "";
-    }
-
     public CoreProtectAPI getCoreProtect() {
         Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("CoreProtect");
 
@@ -216,19 +157,19 @@ public class EvoComponent {
 
     public void updateBoard(Player pl) {
         FastBoard board = this.boards.get(pl.getUniqueId());
-        PlayerManager plm = EvoPlugin.getInstance().plmList.get(pl);
+        PlayerPeriod plm = main.getCustomPlayer().get(pl);
         int limiter =  plm.getLimiter();
         User user = EvoPlugin.getInstance().LPapi.getPlayerAdapter(Player.class).getUser(pl);
         String prefix = user.getCachedData().getMetaData().getPrefix().replace("&", "§").toString().replace('"', ' ');
-        String period = EvoPlugin.getInstance().getComponents().getPeriod(plm.getPeriod());
+        String period = main.getPeriodCaster().getPeriod(plm.getPeriod());
         int money = main.econ.getPlayerEcon(pl).getMoney();
         int bank = main.econ.getPlayerEcon(pl).getBank();
         board.updateTitle(ChatColor.GOLD + "Evolium");
         board.updateLines(
                 "§7",
                 "         §7+-----§2Époque§7-----+",
-                "§aPériode actuelle: §2" + period + " " + plm.getPeriodLimitStyleBar(limiter),
-                "§aPoints d'Expérience: §2" + plm.getStringExp(plm.getExp())  + "/" + plm.getPeriodLimitStyle(limiter),
+                "§aPériode actuelle: §2" + period + " " + main.getPeriodCaster().getStringPeriodLimit(limiter),
+                "§aPoints d'Expérience: §2" + main.getPeriodCaster().getStringExp(plm.getExp())  + "/" + main.getPeriodCaster().getStringPeriodLimit(limiter),
                 "§aObjectifs: §2",
                 " §6",
                 "         §7+-----§6Infos§7------+",
@@ -309,18 +250,18 @@ public class EvoComponent {
             item.setDurability((short) 3);
         }
         SkullMeta skull = (SkullMeta) item.getItemMeta();
-        skull.setOwner(player.getDisplayName());
+        skull.setOwningPlayer(player);
         skull.setDisplayName("§2§nInformations");
         ArrayList<String> lore = new ArrayList<>(Arrays.asList("", "§aBienvenue §2" + player.getDisplayName() + " §asur","§ala page d'informations d'evolium", "§avous pouvez récupérer des informations","§aà propos de votre période", ""));
         skull.setLore(lore);
-        skull.setOwner(player.getName());
+        skull.setOwningPlayer(player);
         item.setItemMeta(skull);
 
         return item;
     }
 
     public String getProgressBar(Player pl){
-        int placement = main.plmList.get(pl).getExp() * 20 / main.plmList.get(pl).getPeriodLimit(main.plmList.get(pl).getLimiter());
+        int placement = main.getCustomPlayer().get(pl).getExp() * 20 / main.getPeriodCaster().getIntPeriodLimit(main.getCustomPlayer().get(pl).getLimiter());
         StringBuilder str = new StringBuilder("||||||||||||||||||||");
         str.insert(placement, "§e");
         str.insert(0, "§6");
@@ -328,7 +269,7 @@ public class EvoComponent {
     }
 
     public int getProgressPercent(Player pl){
-        int percent = main.plmList.get(pl).getExp() * 100 / main.plmList.get(pl).getPeriodLimit(main.plmList.get(pl).getLimiter());
+        int percent = main.getCustomPlayer().get(pl).getExp() * 100 / main.getPeriodCaster().getIntPeriodLimit(main.getCustomPlayer().get(pl).getLimiter());
         return percent;
     }
 
@@ -380,6 +321,12 @@ public class EvoComponent {
         if(nb % 2 == 0)
             nb = -nb;
         return nb;
+    }
+
+    public String firstLetterUp(String str){
+        StringBuilder sb = new StringBuilder(str);
+        sb.replace(0, 1, String.valueOf(sb.charAt(0)).toUpperCase());
+        return sb.toString();
     }
 
     static {

@@ -1,6 +1,7 @@
 package fr.palmus.plugin.listeners;
 
 import fr.palmus.plugin.EvoPlugin;
+import fr.palmus.plugin.enumeration.Period;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -24,8 +25,8 @@ public class DamageManager implements Listener {
             e.setDroppedExp(0);
             e.getDrops().clear();
             if(main.getComponents().prehistoireKill.containsKey(entity.getName())){
-                if(main.plmList.get(pl).getPeriod() == 0){
-                    main.plmList.get(pl).addExp(main.getComponents().prehistoireKill.get(entity.getName()));
+                if(main.getCustomPlayer().get(pl).getPeriod() == Period.PREHISTOIRE){
+                    main.getCustomPlayer().get(pl).addExp(main.getComponents().prehistoireKill.get(entity.getName()));
                 }
             }
         }

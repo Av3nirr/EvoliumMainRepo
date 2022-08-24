@@ -3,7 +3,9 @@ package fr.palmus.plugin;
 import com.sk89q.worldguard.WorldGuard;
 import fr.palmus.plugin.commands.*;
 import fr.palmus.plugin.components.EvoComponent;
-import fr.palmus.plugin.components.PlayerManager;
+import fr.palmus.plugin.period.PeriodCaster;
+import fr.palmus.plugin.mysql.DatabaseManager;
+import fr.palmus.plugin.player.CustomPlayer;
 import fr.palmus.plugin.economy.Economy;
 import fr.palmus.plugin.listeners.*;
 import fr.palmus.plugin.utils.fastboard.FastBoard;
@@ -24,8 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +42,7 @@ public class EvoPlugin extends JavaPlugin {
 
     public ArrayList<Player> playerExp = new ArrayList<>();
 
-    public HashMap<Player, PlayerManager> plmList = new HashMap<>();
+    private CustomPlayer customPlayer;
 
     public CoreProtectAPI api;
 
@@ -49,6 +51,8 @@ public class EvoPlugin extends JavaPlugin {
     public boolean FarmlandsModules;
 
     public Economy econ;
+
+    private PeriodCaster periodCaster;
 
     private ScheduledExecutorService executorMonoThread;
     private ScheduledExecutorService scheduledExecutorService;
@@ -60,14 +64,21 @@ public class EvoPlugin extends JavaPlugin {
 
     RegisteredServiceProvider<LuckPerms> provider;
 
+    private DatabaseManager databaseManager;
+
     @Override
     public void onEnable() {
 
         log = getLogger();
         saveDefaultConfig();
         INSTANCE = this;
+        databaseManager = new DatabaseManager();
+        log.log(Level.INFO,ChatColor.DARK_GREEN + "-------------------------------------------------------------------");
+        customPlayer = new CustomPlayer(this);
         storage = new EvoComponent();
+        periodCaster = new PeriodCaster();
         setCommands();
+
         log.log(Level.INFO,ChatColor.GREEN + "Initialised !");
 
         getComponents().initHashmap();
@@ -143,18 +154,15 @@ public class EvoPlugin extends JavaPlugin {
         }
 
         for (Player pl : Bukkit.getOnlinePlayers()) {
-            if (cfg.get(pl.getDisplayName() + ".period") == null) {
-                cfg.set(pl.getDisplayName() + ".period", 0);
-                cfg.set(pl.getDisplayName() + ".exp", 0);
-                cfg.set(pl.getDisplayName() + ".doubler", 0);
-                cfg.set(pl.getDisplayName() + ".rank", 1);
+            if (cfg.get(pl.getUniqueId() + ".period") == null) {
                 try {
-                    cfg.save(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    getCustomPlayer().initPlayer(pl);
+                    this.econ.initPlayerEcon(pl);
+                } catch (IOException | SQLException e) {
+                    log.log(Level.SEVERE, ChatColor.RED + "Failed Load economy module FATAL Disabling not tranquillou bidou...");
+                    getPluginLoader().disablePlugin(this);
                 }
             }
-            plmList.put(pl, new PlayerManager(pl, cfg.getInt(pl.getDisplayName() + ".exp")));
             for (FastBoard board : getComponents().boards.values()) {
                 getComponents().updateBoard(pl);
             }
@@ -163,19 +171,30 @@ public class EvoPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        boolean safeDisabled = true;
         saveDefaultConfig();
         for(Player pl : playerExp){
-            plmList.get(pl).saveExp();
+            getCustomPlayer().get(pl).saveExp();
             econ.getPlayerEcon(pl).saveMoney();
         }
         try {
             cfg.save(file);
         } catch (IOException | NullPointerException e) {
-            log.severe(ChatColor.RED + "FAILED TO SAVE CONFIG, ALL THE EXP WON THIS SESSION SHOULD BE LOST, FATAL.");
-            getPluginLoader().disablePlugin(this);
-            return;
+            if(getDatabaseManager() == null){
+                log.severe(ChatColor.RED + "FAILED TO SAVE CONFIG, ALL THE EXP WON THIS SESSION SHOULD BE LOST, FATAL.");
+            }
+            safeDisabled = false;
         }
-        log.log(Level.INFO, ChatColor.GREEN + "Disabling EvoPlugin tranquillou bidou...");
+        for(Player pl : playerExp){
+            try {
+                getCustomPlayer().saveData(pl, getDatabaseManager().getDatabase().getConnection());
+            } catch (SQLException e) {
+                log.severe(ChatColor.RED + "FAILED TO SAVE DATA ON DATABASE");
+                safeDisabled = false;
+            }
+            getDatabaseManager().close();
+        }
+        if(safeDisabled) log.log(Level.INFO, ChatColor.GREEN + "Disabling EvoPlugin tranquillou bidou...");
     }
 
     public void setCommands(){
@@ -206,4 +225,15 @@ public class EvoPlugin extends JavaPlugin {
         return INSTANCE;
     }
 
+    public CustomPlayer getCustomPlayer(){
+        return customPlayer;
+    }
+
+    public PeriodCaster getPeriodCaster() {
+        return periodCaster;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
 }

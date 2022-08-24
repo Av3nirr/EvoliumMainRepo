@@ -135,6 +135,13 @@ public class ItemBuilder {
         return this;
     }
     /**
+     * Sets Unbreakable items.
+     */
+    public ItemBuilder setUnbreakable(){
+        is.getItemMeta().setUnbreakable(true);
+        return this;
+    }
+    /**
      * Re-sets the lore.
      * @param lore The lore to set it to.
      */

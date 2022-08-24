@@ -29,12 +29,12 @@ public class FarmzoneExecutor implements CommandExecutor {
         }
 
         if(args.length == 0){
-            if(main.getConfig().get("farmzone." + main.plmList.get(pl).getPeriod() + ".loc") == null){
+            if(main.getConfig().get("farmzone." + main.getCustomPlayer().get(pl).getPeriod() + ".loc") == null){
                 pl.sendMessage(main.getComponents().getPrefix("error") + "La farmzone de cette période n'a pas été définie merci de prévenir un administrateur");
                 return false;
             }
-            pl.teleport((Location) main.getConfig().get("farmzone." + main.plmList.get(pl).getPeriod() + ".loc"));
-            pl.sendTitle("§e"+ main.getComponents().getPeriod(main.plmList.get(pl).getPeriod()), "§6Farmzone", 10, 40, 10);
+            pl.teleport((Location) main.getConfig().get("farmzone." + main.getCustomPlayer().get(pl).getPeriod() + ".loc"));
+            pl.sendTitle("§e"+ main.getPeriodCaster().getPeriod(main.getCustomPlayer().get(pl).getPeriod()), "§6Farmzone", 10, 40, 10);
             return false;
         }
 
@@ -42,10 +42,10 @@ public class FarmzoneExecutor implements CommandExecutor {
             pl.sendMessage(main.getComponents().getPrefix("error") + "usage: /farmzone set <période>");
             return false;
         }
-
+        int period = Integer.parseInt(args[1]);
         main.getConfig().set("farmzone." + args[1] + ".loc", pl.getLocation());
         main.saveConfig();
-        pl.sendMessage(main.getComponents().getPrefix("") + "Farmzone de là période " + main.getComponents().getPeriod(main.plmList.get(pl).getPeriod())+ " définie avec succès");
+        pl.sendMessage(main.getComponents().getPrefix("") + "Farmzone de la période " + main.getPeriodCaster().getPeriod(main.getPeriodCaster().getEnumPeriodFromInt(period)) + " définie avec succès");
 
         return false;
     }

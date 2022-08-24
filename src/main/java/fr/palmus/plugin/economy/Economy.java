@@ -18,7 +18,7 @@ public class Economy {
     public File file;
     public FileConfiguration cfg;
 
-    private HashMap<Player, EconPlayerManager> econManagement;
+    public HashMap<Player, EconPlayerManager> econManagement;
 
     public Economy(EvoPlugin main){
         this.main = main;

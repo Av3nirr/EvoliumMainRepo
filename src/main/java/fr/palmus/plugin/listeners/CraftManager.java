@@ -61,11 +61,11 @@ public class CraftManager implements Listener {
                     }
                     pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                     int exp = main.getComponents().prehistoireCraft.get(e.getRecipe().getResult().getType()) * minAmount;
-                    main.plmList.get(pl).addExp(exp);
+                    main.getCustomPlayer().get(pl).addExp(exp);
                     return;
                 }
             }
-            main.plmList.get(pl).addExp(main.getComponents().prehistoireCraft.get(e.getRecipe().getResult().getType()));
+            main.getCustomPlayer().get(pl).addExp(main.getComponents().prehistoireCraft.get(e.getRecipe().getResult().getType()));
             pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         }
 

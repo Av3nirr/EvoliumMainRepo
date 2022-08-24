@@ -8,6 +8,7 @@ depend:
   - LuckPerms
   - WorldGuard
   - WorldEdit
+  - Votifier
 commands:
   exp:
     description: Intéragir avec le module d'exp

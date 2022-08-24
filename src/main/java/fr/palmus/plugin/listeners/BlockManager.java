@@ -1,8 +1,9 @@
 package fr.palmus.plugin.listeners;
 
 import fr.palmus.plugin.EvoPlugin;
-import fr.palmus.plugin.components.PlayerManager;
-import fr.palmus.plugin.utils.CustomItem;
+import fr.palmus.plugin.enumeration.Period;
+import fr.palmus.plugin.player.PlayerPeriod;
+import fr.palmus.plugin.item.CustomItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,13 +22,13 @@ public class BlockManager implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e){
         Player pl = e.getPlayer();
-        PlayerManager plm = main.plmList.get(pl);
+        PlayerPeriod plm = main.getCustomPlayer().get(pl);
         Material type = e.getBlock().getType();
         if(!(pl.getGameMode() == GameMode.SURVIVAL)){
             return;
         }
 
-        if(plm.getPeriod() == 0){
+        if(main.getCustomPlayer().get(pl).getPeriod() == Period.PREHISTOIRE){
 
             if(main.getComponents().prehistoire.containsKey(type)){
                 if(main.api.blockLookup(e.getBlock(),

@@ -1,7 +1,7 @@
 package fr.palmus.plugin.listeners.custom;
 
 import fr.palmus.plugin.EvoPlugin;
-import fr.palmus.plugin.components.PlayerManager;
+import fr.palmus.plugin.player.PlayerPeriod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -10,15 +10,15 @@ import org.bukkit.event.HandlerList;
 public class PlayerExpChangeEvent extends Event implements Cancellable {
 
     private Player player;
-    private PlayerManager plm;
-    private PlayerManager.ExpAction action;
+    private PlayerPeriod plm;
+    private PlayerPeriod.ExpAction action;
     private int exp;
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
 
-    public PlayerExpChangeEvent(Player pl, int exp,PlayerManager.ExpAction action){
+    public PlayerExpChangeEvent(Player pl, int exp, PlayerPeriod.ExpAction action, EvoPlugin main){
         this.player = pl;
-        this.plm = EvoPlugin.getInstance().plmList.get(pl);
+        this.plm = main.getCustomPlayer().get(pl);
         this.action = action;
         this.exp = exp;
         this.isCancelled = false;
@@ -47,7 +47,7 @@ public class PlayerExpChangeEvent extends Event implements Cancellable {
         return player;
     }
 
-    public PlayerManager getPlayerManager() {
+    public PlayerPeriod getPlayerManager() {
         return plm;
     }
 
@@ -55,7 +55,7 @@ public class PlayerExpChangeEvent extends Event implements Cancellable {
         return exp;
     }
 
-    public PlayerManager.ExpAction getAction() {
+    public PlayerPeriod.ExpAction getAction() {
         return action;
     }
 
