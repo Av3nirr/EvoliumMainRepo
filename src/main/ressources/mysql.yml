@@ -1,5 +1,6 @@
 host: ""
 user: ""
 password: ""
-port: 3809
+port: 3306
 name: ""
+dbType: "mariadb"

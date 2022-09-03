@@ -8,6 +8,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
+import org.mariadb.jdbc.Driver;
+
 public class DBConnection {
 
     private DBCredentials dbCredentials;
@@ -26,6 +28,7 @@ public class DBConnection {
     public void connect(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("org.mariadb.jdbc.Driver");
             this.connection = DriverManager.getConnection(this.dbCredentials.toURI(), this.dbCredentials.getUser(), this.dbCredentials.getPass());
             connected = true;
             main.log.log(Level.INFO, ChatColor.GREEN + "MYSQL connected to " + this.dbCredentials.toURI());

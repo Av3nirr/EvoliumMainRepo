@@ -3,6 +3,8 @@ author: Palmus_
 main: fr.palmus.plugin.EvoPlugin
 version: 2.2.3
 api-version: 1.18
+libraries:
+  - org.mariadb.jdbc:mariadb-java-client:3.0.6
 depend:
   - CoreProtect
   - LuckPerms
