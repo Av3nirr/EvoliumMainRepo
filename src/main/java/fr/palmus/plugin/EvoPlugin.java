@@ -154,15 +154,15 @@ public class EvoPlugin extends JavaPlugin {
         }
 
         for (Player pl : Bukkit.getOnlinePlayers()) {
-            if (cfg.get(pl.getUniqueId() + ".period") == null) {
-                try {
-                    getCustomPlayer().initPlayer(pl);
-                    this.econ.initPlayerEcon(pl);
-                } catch (IOException | SQLException e) {
-                    log.log(Level.SEVERE, ChatColor.RED + "Failed Load economy module FATAL Disabling not tranquillou bidou...");
-                    getPluginLoader().disablePlugin(this);
-                }
+            try {
+                getCustomPlayer().initPlayer(pl);
+                this.econ.initPlayerEcon(pl);
+            } catch (IOException | SQLException e) {
+                log.log(Level.SEVERE, ChatColor.RED + "Failed Load economy module FATAL Disabling not tranquillou bidou...");
+                getPluginLoader().disablePlugin(this);
             }
+            FastBoard boards = new FastBoard(pl);
+            getComponents().boards.put(pl.getUniqueId(), boards);
             for (FastBoard board : getComponents().boards.values()) {
                 getComponents().updateBoard(pl);
             }

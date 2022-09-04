@@ -6,6 +6,8 @@ import fr.palmus.plugin.period.key.StorageKey;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -13,12 +15,12 @@ public class PeriodStorage {
 
     EvoPlugin main = EvoPlugin.getInstance();
 
-    public HashMap<Block, Integer> getBreakableMap(StorageKey key) {
-        HashMap map;
+    public HashMap<Material, Integer> getBreakableMap(StorageKey key) {
+        HashMap<Material, Integer> map;
 
         switch (key.get()) {
-            case 1:
-                map = new HashMap<Material, Integer>() {{
+            case 1 -> {
+                map = new HashMap<>() {{
                     put(Material.STONE, 3);
                     put(Material.ACACIA_LOG, 4);
                     put(Material.BIRCH_LOG, 4);
@@ -36,8 +38,9 @@ public class PeriodStorage {
                     put(Material.DIRT, 1);
                 }};
                 return map;
-            case 2:
-                map = new HashMap<Material, Integer>() {{
+            }
+            case 2 -> {
+                map = new HashMap<>() {{
                     put(Material.STONE, 3);
                     put(Material.ACACIA_LOG, 4);
                     put(Material.BIRCH_LOG, 4);
@@ -55,62 +58,53 @@ public class PeriodStorage {
                     put(Material.DIRT, 1);
                 }};
                 return map;
-            default:
-                throw new IllegalStateException("Unexpected value: " + key);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + key);
         }
     }
 
-    public HashMap<Material, Set> getKillMap(StorageKey key){
-        HashMap map;
-
-        switch (key.get()){
-            case 1:
-                map = new HashMap<Material, Set>(){{
-                    put(Material.SKELETON_SKULL, Set.of(75, "§eDésosseur"));
-                    put(Material.ZOMBIE_HEAD, Set.of(75, "§eAffamé"));
-                }};
-                break;
-
-            case 2:
-                map = new HashMap<Material, Set>(){{
-                    put(Material.SKELETON_SKULL, Set.of(75, "§eDésosseur"));
-                    put(Material.ZOMBIE_HEAD, Set.of(75, "§eAffamé"));
-                }};
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + key);
-        }
+    public HashMap<Material, ArrayList<String>> getKillMap(StorageKey key){
+        HashMap<Material, ArrayList<String>> map = switch (key.get()) {
+            case 1 -> new HashMap<>() {{
+                put(Material.SKELETON_SKULL, new ArrayList<String>(Arrays.asList("75", "§eDésosseur")));
+                put(Material.ZOMBIE_HEAD, new ArrayList<String>(Arrays.asList("75", "§eAffamé")));
+            }};
+            case 2 -> new HashMap<>() {{
+                put(Material.SKELETON_SKULL, new ArrayList<String>(Arrays.asList("75", "§eDésosseur")));
+                put(Material.ZOMBIE_HEAD, new ArrayList<String>(Arrays.asList("75", "§eAffamé")));
+            }};
+            default -> throw new IllegalStateException("Unexpected value: " + key);
+        };
 
         return map;
     }
 
     public HashMap<Material, Integer> getCraftMap(StorageKey key){
-        HashMap map;
+        HashMap<Material, Integer> map;
 
         switch (key.get()){
-            case 1:
-                map = new HashMap<Material, Integer>(){{
+            case 1 -> {
+                map = new HashMap<>() {{
                     put(Material.STRING, 10);
                     put(Material.WOODEN_AXE, 25);
                     put(Material.WOODEN_HOE, 25);
                     put(Material.WOODEN_PICKAXE, 25);
                     put(Material.WOODEN_SWORD, 25);
                 }};
-                break;
+                return map;
+            }
 
-            case 2:
-                map = new HashMap<Material, Integer>(){{
+            case 2 -> {
+                map = new HashMap<>() {{
                     put(Material.STRING, 10);
                     put(Material.WOODEN_AXE, 25);
                     put(Material.WOODEN_HOE, 25);
                     put(Material.WOODEN_PICKAXE, 25);
                     put(Material.WOODEN_SWORD, 25);
                 }};
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + key);
+                return map;
+            }
+            default->throw new IllegalStateException("Unexpected value: " + key);
         }
-
-        return map;
     }
 }

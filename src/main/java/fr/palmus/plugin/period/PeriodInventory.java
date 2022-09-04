@@ -41,9 +41,10 @@ public class PeriodInventory {
         inv.setItem(inv.getSize() - 5, new ItemBuilder(Material.BARRIER).setName("§cFermer").addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack());
 
         int i = 9;
-        for(Block block : storage.getBreakableMap(key).keySet()){
-            ItemStack blc = new ItemBuilder(Material.STRING).setName("§a" + main.getComponents().firstLetterUp(block.getType().getData().toString().toLowerCase().replace("_", " "))).setLore(Arrays.asList("§7-------------", "§eExp: " + storage.getBreakableMap(key).get(block), "§eType: Blocks", "§7-------------", "§aPériode: " + main.getCustomPlayer().get(pl).getEntirePeriodStyle(), "§7-------------")).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack();
+        for(Material block : storage.getBreakableMap(key).keySet()){
+            ItemStack blc = new ItemBuilder(block).setName("§a" + main.getComponents().firstLetterUp(block.createBlockData().getMaterial().name().toLowerCase().replace("_", " "))).setLore(Arrays.asList("§7-------------", "§eExp: " + storage.getBreakableMap(key).get(block), "§eType: Blocks", "§7-------------", "§aPériode: " + main.getCustomPlayer().get(pl).getEntirePeriodStyle(), "§7-------------")).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack();
             inv.setItem(i, blc);
+            i++;
         }
 
         return inv;
@@ -68,19 +69,12 @@ public class PeriodInventory {
         int i = 9;
         for(Material mat : storage.getKillMap(key).keySet()){
             boolean hasRun = false;
-            String name = null;
-            int exp = 0;
-            for(Iterator it = storage.getKillMap(key).get(mat).iterator(); it.hasNext();){
-                if(hasRun){
-                    exp = (int) it.next();
-                    break;
-                }else {
-                    name = (String) it.next();
-                    hasRun = true;
-                }
-            }
-            ItemStack blc = new ItemBuilder(Material.STRING).setName("§a" + main.getComponents().firstLetterUp(name)).setLore(Arrays.asList("§7-------------", "§eExp: " + exp, "§eType: Mobs", "§7-------------", "§aPériode: " + main.getCustomPlayer().get(pl).getEntirePeriodStyle(), "§7-------------")).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack();
+            String name = storage.getKillMap(key).get(mat).get(1);
+            int exp = Integer.parseInt(storage.getKillMap(key).get(mat).get(0));
+
+            ItemStack blc = new ItemBuilder(mat).setName("§a" + main.getComponents().firstLetterUp(name)).setLore(Arrays.asList("§7-------------", "§eExp: " + exp, "§eType: Mobs", "§7-------------", "§aPériode: " + main.getCustomPlayer().get(pl).getEntirePeriodStyle(), "§7-------------")).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack();
             inv.setItem(i, blc);
+            i++;
         }
         return inv;
     }
@@ -103,8 +97,9 @@ public class PeriodInventory {
 
         int i = 9;
         for(Material item : storage.getCraftMap(key).keySet()){
-            ItemStack blc = new ItemBuilder(Material.STRING).setName("§a" + main.getComponents().firstLetterUp(item.getData().toString().toLowerCase().replace("_", " "))).setLore(Arrays.asList("§7-------------", "§eExp: " + storage.getBreakableMap(key).get(item), "§eType: Items", "§7-------------", "§aPériode: " + main.getCustomPlayer().get(pl).getEntirePeriodStyle(), "§7-------------")).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack();
+            ItemStack blc = new ItemBuilder(item).setName("§a" + main.getComponents().firstLetterUp(item.name().toLowerCase().replace("_", " "))).setLore(Arrays.asList("§7-------------", "§eExp: " + storage.getCraftMap(key).get(item), "§eType: Items", "§7-------------", "§aPériode: " + main.getCustomPlayer().get(pl).getEntirePeriodStyle(), "§7-------------")).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack();
             inv.setItem(i, blc);
+            i++;
         }
 
         return inv;

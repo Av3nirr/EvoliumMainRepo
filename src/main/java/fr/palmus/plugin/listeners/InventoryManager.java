@@ -20,35 +20,49 @@ public class InventoryManager implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e){
         if(e.getView().getTitle().equalsIgnoreCase("§eInformations")){
+            e.setCancelled(true);
             Player pl = (Player) e.getWhoClicked();
             PlayerPeriod customPlayer = main.getCustomPlayer().get(pl);
+
+            if(e.getCurrentItem() == null){
+                return;
+            }
+
             if(e.getCurrentItem().getType() == Material.BARRIER){
+                e.setCancelled(true);
                 e.getWhoClicked().closeInventory();
             }
 
             if(e.getCurrentItem().getType() == Material.EXPERIENCE_BOTTLE){
                 Inventory inv = new PeriodInventory().getExpInventory(pl, main.getPeriodCaster().getStorageKey(customPlayer.getPeriod(), customPlayer.getLimiter()));
                 pl.openInventory(inv);
+                e.setCancelled(true);
+                return;
             }
 
             if(e.getCurrentItem().getType() == Material.IRON_PICKAXE){
                 Inventory inv = new PeriodInventory().getCraftInventory(pl, main.getPeriodCaster().getStorageKey(customPlayer.getPeriod(), customPlayer.getLimiter()));
                 pl.openInventory(inv);
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                e.setCancelled(true);
+                return;
             }
 
             if(e.getCurrentItem().getType() == Material.CRAFTING_TABLE){
                 Inventory inv = new PeriodInventory().getKillInventory(pl, main.getPeriodCaster().getStorageKey(customPlayer.getPeriod(), customPlayer.getLimiter()));
                 pl.openInventory(inv);
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                e.setCancelled(true);
+                return;
             }
 
             if(e.getCurrentItem().getType() == Material.WOODEN_SWORD){
                 Inventory inv = new PeriodInventory().getExpInventory(pl, main.getPeriodCaster().getStorageKey(customPlayer.getPeriod(), customPlayer.getLimiter()));
                 pl.openInventory(inv);
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                e.setCancelled(true);
+                return;
             }
-            e.setCancelled(true);
         }
     }
 }
