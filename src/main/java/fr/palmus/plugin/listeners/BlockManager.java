@@ -2,6 +2,8 @@ package fr.palmus.plugin.listeners;
 
 import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.enumeration.Period;
+import fr.palmus.plugin.period.PeriodStorage;
+import fr.palmus.plugin.period.key.StorageKey;
 import fr.palmus.plugin.player.PlayerPeriod;
 import fr.palmus.plugin.item.CustomItem;
 import org.bukkit.GameMode;
@@ -19,21 +21,24 @@ public class BlockManager implements Listener {
 
     EvoPlugin main = EvoPlugin.getInstance();
 
+    PeriodStorage storage = new PeriodStorage();
+
     @EventHandler
     public void onBreak(BlockBreakEvent e){
         Player pl = e.getPlayer();
-        PlayerPeriod plm = main.getCustomPlayer().get(pl);
+        PlayerPeriod customPlayer = main.getCustomPlayer().get(pl);
         Material type = e.getBlock().getType();
+        StorageKey key = customPlayer.getStorageKey();
         if(!(pl.getGameMode() == GameMode.SURVIVAL)){
             return;
         }
 
         if(main.getCustomPlayer().get(pl).getPeriod() == Period.PREHISTOIRE){
 
-            if(main.getComponents().prehistoire.containsKey(type)){
+            if(storage.getBreakableMap(key).containsKey(type)){
                 if(main.api.blockLookup(e.getBlock(),
                         (int)(System.currentTimeMillis() / 1000L)).size() > 0) return;
-                plm.addExp(main.getComponents().prehistoire.get(type));
+                customPlayer.addExp(storage.getBreakableMap(key).get(type));
             }
         }
 
@@ -44,7 +49,7 @@ public class BlockManager implements Listener {
             int rdm = new Random().nextInt(100);
             if(rdm <= 5){
                 pl.getWorld().dropItemNaturally(e.getBlock().getLocation(), CustomItem.fiber);
-                plm.addExp(10);
+                customPlayer.addExp(10);
             }
         }
     }

@@ -40,7 +40,7 @@ public class DBCredentials {
 
         host = cfg.getString("host");
         user = cfg.getString("user");
-        pass = cfg.getString("pass");
+        pass = cfg.getString("password");
         dbName = cfg.getString("name");
         dbType = cfg.getString("dbType");
         port = cfg.getInt("port");

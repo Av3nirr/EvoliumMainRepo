@@ -58,9 +58,6 @@ public class EvoComponent {
     public RegionContainer container;
 
     public void initHashmap(){
-        if(main.FarmlandsModules){
-
-        }
 
     }
 
@@ -160,25 +157,30 @@ public class EvoComponent {
         PlayerPeriod plm = main.getCustomPlayer().get(pl);
         int limiter =  plm.getLimiter();
         User user = EvoPlugin.getInstance().LPapi.getPlayerAdapter(Player.class).getUser(pl);
-        String prefix = user.getCachedData().getMetaData().getPrefix().replace("&", "§").toString().replace('"', ' ');
+        String prefix;
+        try{
+            prefix = user.getCachedData().getMetaData().getPrefix().replace("&", "§").toString().replace('"', ' ');
+        }catch (NullPointerException e){
+            prefix = "null";
+        }
         String period = main.getPeriodCaster().getPeriod(plm.getPeriod());
         int money = main.econ.getPlayerEcon(pl).getMoney();
         int bank = main.econ.getPlayerEcon(pl).getBank();
-        board.updateTitle(ChatColor.GOLD + "Evolium");
+        board.updateTitle(ChatColor.WHITE + "§lPLAY.EVOLIUM.FR ☀");
         board.updateLines(
                 "§7",
-                "         §7+-----§2Époque§7-----+",
-                "§aPériode actuelle: §2" + period + " " + main.getPeriodCaster().getStringPeriodLimit(limiter),
-                "§aPoints d'Expérience: §2" + main.getPeriodCaster().getStringExp(plm.getExp())  + "/" + main.getPeriodCaster().getStringPeriodLimit(limiter),
-                "§aObjectifs: §2",
+                "§7| §r§lMa Période",
+                "  §7Période actuelle: §2" + period + " " + main.getPeriodCaster().getLimiterString(limiter),
+                "  §7Points d'Expérience: §2" + main.getPeriodCaster().getStringExp(plm.getExp())  + "/" + main.getPeriodCaster().getStringPeriodLimit(limiter),
+                "  §7Objectifs: §2",
                 " §6",
-                "         §7+-----§6Infos§7------+",
-                "§ePseudo: §6" + pl.getDisplayName(),
-                "§eGrade: §6" + prefix,
-                "§eArgent: §6" + money,
-                "§eBanque: §6" + bank,
+                "§7| §r§lMon Profil",
+                "  §7Pseudo: §6" + pl.getDisplayName(),
+                "  §7Grade: §6" + prefix,
+                "  §7Argent: §6" + money + "§6 \u26C0",
+                "  §7Banque: §6" + bank + "§6 \u26C3",
                 " ",
-                "         §aplay.evolium.fr"
+                "§aVoter Pour le serveur = soutiens"
         );
     }
 

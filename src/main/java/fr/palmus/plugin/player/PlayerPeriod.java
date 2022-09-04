@@ -4,6 +4,7 @@ import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.enumeration.Period;
 import fr.palmus.plugin.listeners.custom.PlayerExpChangeEvent;
 import fr.palmus.plugin.listeners.custom.PlayerPeriodChangeEvent;
+import fr.palmus.plugin.period.key.StorageKey;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -162,6 +163,10 @@ public class PlayerPeriod {
 
     public Period getPeriod(){
         return period;
+    }
+
+    public StorageKey getStorageKey(){
+        return main.getPeriodCaster().getStorageKey(getPeriod(), getLimiter());
     }
 
 }

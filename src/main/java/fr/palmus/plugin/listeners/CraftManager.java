@@ -1,6 +1,9 @@
 package fr.palmus.plugin.listeners;
 
 import fr.palmus.plugin.EvoPlugin;
+import fr.palmus.plugin.period.PeriodCaster;
+import fr.palmus.plugin.period.PeriodStorage;
+import fr.palmus.plugin.player.PlayerPeriod;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -12,9 +15,13 @@ public class CraftManager implements Listener {
 
     EvoPlugin main = EvoPlugin.getInstance();
 
+    PeriodStorage storage = new PeriodStorage();
+
     @EventHandler
     public void onCraft(CraftItemEvent e){
         Player pl = (Player) e.getWhoClicked();
+        PlayerPeriod customPlayer = main.getCustomPlayer().get(pl);
+
         if(e.getRecipe().getResult().getType() != Material.STRING){
             for(int i = 1; i < 9; i++){
                 if(e.getClickedInventory().getItem(i) != null) {
@@ -38,7 +45,7 @@ public class CraftManager implements Listener {
                 }
             }
         }
-        if(main.getComponents().prehistoireCraft.containsKey(e.getRecipe().getResult().getType())){
+        if(storage.getCraftMap(customPlayer.getStorageKey()).containsKey(e.getRecipe().getResult().getType())){
             int[] amount = new int[10];
             Material type = e.getRecipe().getResult().getType();
             int minAmount = 64;
@@ -65,7 +72,7 @@ public class CraftManager implements Listener {
                     return;
                 }
             }
-            main.getCustomPlayer().get(pl).addExp(main.getComponents().prehistoireCraft.get(e.getRecipe().getResult().getType()));
+            main.getCustomPlayer().get(pl).addExp(storage.getCraftMap(customPlayer.getStorageKey()).get(e.getRecipe().getResult().getType()));
             pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         }
 

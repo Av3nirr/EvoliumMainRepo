@@ -6,7 +6,7 @@
 
     <groupId>fr.palmus.plugin</groupId>
     <artifactId>EvoPlugin</artifactId>
-    <version>2.2.3</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <name>EvoPlugin</name>

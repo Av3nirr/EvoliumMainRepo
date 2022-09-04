@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class CustomPlayer {
     private EvoPlugin main;
@@ -30,7 +31,7 @@ public class CustomPlayer {
         final DBConnection database = main.getDatabaseManager().getDatabase();
         try {
             final Connection connection = database.getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT uuid, period, exp, doubler, limiter, rank FROM player_data WHERE uuid = ?");
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT uuid, period, exp, doubler, limiter, rank FROM player_data WHERE uuid = \"" + pl.getUniqueId() + "\"");
 
             preparedStatement.setString(1, pl.getUniqueId().toString());
 
@@ -41,10 +42,9 @@ public class CustomPlayer {
             }else{
                 createUserData(connection, pl);
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
+            main.log.log(Level.SEVERE, "ERROR on initializing user data");
         }
 
     }
@@ -55,7 +55,7 @@ public class CustomPlayer {
 
     private void createUserData(Connection connection, Player pl){
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO player_data VALUES ?, ?, ?, ?, ?, ?, ?, ?");
+            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO player_data VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             final long time = System.currentTimeMillis();
             preparedStatement.setString(1, pl.getUniqueId().toString());
             preparedStatement.setInt(2, main.cfg.getInt(pl.getUniqueId() + ".period"));
@@ -69,6 +69,7 @@ public class CustomPlayer {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            main.log.log(Level.SEVERE, "ERROR on creating user data");
         }
     }
 
@@ -95,16 +96,18 @@ public class CustomPlayer {
 
     public void saveData(Player pl, Connection connection){
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO player_data VALUES ?, ?, ?, ?, ?, ?, ?, ?");
-            final long time = System.currentTimeMillis();
-            preparedStatement.setInt(2, main.cfg.getInt(pl.getUniqueId() + ".period"));
-            preparedStatement.setString(3, String.valueOf(main.cfg.getInt(pl.getUniqueId() + ".exp")));
-            preparedStatement.setInt(4, main.cfg.getInt(pl.getUniqueId() + ".doubler"));
-            preparedStatement.setInt(5, main.cfg.getInt(pl.getUniqueId() + ".limiter"));
-            preparedStatement.setInt(6, main.cfg.getInt(pl.getUniqueId() + ".rank"));
-            preparedStatement.setTimestamp(8, new Timestamp(time));
+            final PreparedStatement preparedStatement = connection.prepareStatement("UPDATE player_data SET period = ?, exp = ?, doubler = ?, limiter = ?, rank = ?, updated_at = ? WHERE uuid = ?");
 
+            final long time = System.currentTimeMillis();
+            preparedStatement.setInt(1, main.cfg.getInt(pl.getUniqueId() + ".period"));
+            preparedStatement.setString(2, String.valueOf(main.cfg.getInt(pl.getUniqueId() + ".exp")));
+            preparedStatement.setInt(3, main.cfg.getInt(pl.getUniqueId() + ".doubler"));
+            preparedStatement.setInt(4, main.cfg.getInt(pl.getUniqueId() + ".limiter"));
+            preparedStatement.setInt(5, main.cfg.getInt(pl.getUniqueId() + ".rank"));
+            preparedStatement.setTimestamp(6, new Timestamp(time));
+            preparedStatement.setString(7, pl.getUniqueId().toString());
             preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
