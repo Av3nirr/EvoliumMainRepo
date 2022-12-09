@@ -51,6 +51,8 @@ public class EvoPlugin extends JavaPlugin {
     public boolean FarmlandsModules;
 
     public Economy econ;
+    public ArrayList<Player> NewPlayers = new ArrayList<>();
+    public String[] welcomeList = {"§e%player% §fSouhaite la bienvenue à §e%target%", "§e%target% §fest acceuillis par §e%player%"};
 
     private PeriodCaster periodCaster;
 
@@ -203,6 +205,7 @@ public class EvoPlugin extends JavaPlugin {
         getCommand("money").setExecutor(new EconExecutor());
         getCommand("farmzone").setExecutor(new FarmzoneExecutor());
         getCommand("rtp").setExecutor(new RTPExecutor());
+        getCommand("b").setExecutor(new PlayerWelcomeExecutor());
         log.log(Level.INFO,ChatColor.GREEN + "Commands modules Enabled");
     }
 

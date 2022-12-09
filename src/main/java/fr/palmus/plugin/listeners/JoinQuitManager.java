@@ -18,7 +18,7 @@ public class JoinQuitManager implements Listener {
     EvoPlugin main = EvoPlugin.getInstance();
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) throws IOException, SQLException {
+    public void onJoin(PlayerJoinEvent e) throws IOException, SQLException, InterruptedException {
         Player pl = e.getPlayer();
         System.out.println("[EvoPlugin] Scoreboard linked !");
         main.getCustomPlayer().initPlayer(pl);
@@ -33,6 +33,11 @@ public class JoinQuitManager implements Listener {
         main.getComponents().boards.put(pl.getUniqueId(), board);
         for (FastBoard boarde : main.getComponents().boards.values()) {
             main.getComponents().updateBoard(pl);
+        }
+        if (!pl.hasPlayedBefore()){
+            main.getInstance().NewPlayers.add(pl);
+            wait(60000);
+            main.getInstance().NewPlayers.remove(pl);
         }
     }
 

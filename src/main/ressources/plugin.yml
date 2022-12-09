@@ -31,6 +31,12 @@ commands:
       - period
   bank:
     description: Montre l'argent d'un joueur
+  bienvenue:
+    description: Souhaiter la bienvenue à un joueur
+    aliases:
+      - b
+      - w
+      - welcome
 
 permissions:
   evoplugin.*:
