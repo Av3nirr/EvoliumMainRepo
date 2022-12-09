@@ -16,25 +16,28 @@ public class PlayerWelcomeExecutor implements CommandExecutor {
         Player p = (Player) commandSender;
         if (!(p instanceof Player)){
             System.out.println("Erreur, vous n'êtes pas un joueur !");
+            return false;
         }
         if(args.length != 1) {
             p.sendMessage(main.getComponents().getPrefix("error") + "usage: /b <player>");
             return false;
-        }else {
-            Player target = p.getServer().getPlayer(args[1]);
-            if (main.getInstance().NewPlayers.contains(target)) {
-                //envoie du message au joueur
-                p.sendMessage("§aTu as bien reçu XX€ car tu as souhaité la bienvenue au joueur: §e" + target.getName());
-                //Broadcast du message de bienvenue
-                Random r = new Random();
-                for (Player bcPLayers : p.getServer().getOnlinePlayers()) {
-                    bcPLayers.sendMessage(main.getInstance().welcomeList[r.nextInt(main.getInstance().welcomeList.length)].replace("%player%", p.getName()).replace("%target%", target.getName()));
-                }
-                //ajout de l'argent ! (faire le Multiplicateur)
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/eco add " + p.getName() + 500);
-            } else {
-                p.sendMessage("§cDommage... Il n'y a pas de joueurs nouveaux. Tu pourrait faire de la pub !");
-            }
+        }
+        Player target = Bukkit.getPlayer(args[1]);
+        if (!main.getComponents().NewPlayers.contains(target)) {
+            p.sendMessage(main.getComponents().getPrefix("error") + "Le joueur n'existe pas, ou n'est pas nouveau !");
+            return false;
+        }
+        //envoie du message au joueur
+        int money = new Random().nextInt(500, 1000);
+        //ajout de l'argent !
+        main.econ.getPlayerEcon(p).addMoney(money);
+
+        p.sendMessage("§aTu as bien reçu "+ money +"€ car tu as souhaité la bienvenue au joueur: §e" + target.getName());
+
+        //Broadcast du message de bienvenue
+        Random r = new Random();
+        for (Player bcPLayers : p.getServer().getOnlinePlayers()) {
+            bcPLayers.sendMessage(main.getComponents().welcomeList[r.nextInt(main.getComponents().welcomeList.length)].replace("%player%", p.getName()).replace("%target%", target.getName()));
         }
         return false;
     }

@@ -51,8 +51,7 @@ public class EvoPlugin extends JavaPlugin {
     public boolean FarmlandsModules;
 
     public Economy econ;
-    public ArrayList<Player> NewPlayers = new ArrayList<>();
-    public String[] welcomeList = {"§e%player% §fSouhaite la bienvenue à §e%target%", "§e%target% §fest acceuillis par §e%player%"};
+
 
     private PeriodCaster periodCaster;
 

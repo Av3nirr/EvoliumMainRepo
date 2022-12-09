@@ -57,6 +57,9 @@ public class EvoComponent {
     public BlockVector2 preRegion2;
     public RegionContainer container;
 
+    public ArrayList<Player> NewPlayers = new ArrayList<>();
+    public String[] welcomeList = {"§e%player% §fSouhaite la bienvenue à §e%target%", "§e%target% §fest acceuillis par §e%player%"};
+
     public void initHashmap(){
 
     }

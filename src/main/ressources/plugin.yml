@@ -37,7 +37,6 @@ commands:
       - b
       - w
       - welcome
-
 permissions:
   evoplugin.*:
     description: Administrator permissions.
