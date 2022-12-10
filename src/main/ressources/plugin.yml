@@ -37,6 +37,8 @@ commands:
       - b
       - w
       - welcome
+  find:
+    description: Montre les infos d'un joueur !
 permissions:
   evoplugin.*:
     description: Administrator permissions.
@@ -56,4 +58,6 @@ permissions:
   evoplugin.econ_mod:
     description: Jog a ShipBattle plugin setup parancsaihoz.
     default: op
-
+  evoplugin.find:
+    description: Permission /find
+    default: op

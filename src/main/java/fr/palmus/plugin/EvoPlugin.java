@@ -204,7 +204,8 @@ public class EvoPlugin extends JavaPlugin {
         getCommand("money").setExecutor(new EconExecutor());
         getCommand("farmzone").setExecutor(new FarmzoneExecutor());
         getCommand("rtp").setExecutor(new RTPExecutor());
-        getCommand("b").setExecutor(new PlayerWelcomeExecutor());
+        getCommand("bienvenue").setExecutor(new PlayerWelcomeExecutor());
+        getCommand("find").setExecutor(new FindExecutor());
         log.log(Level.INFO,ChatColor.GREEN + "Commands modules Enabled");
     }
 
