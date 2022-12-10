@@ -22,7 +22,7 @@ public class PlayerWelcomeExecutor implements CommandExecutor {
             p.sendMessage(main.getComponents().getPrefix("error") + "usage: /b <player>");
             return false;
         }
-        Player target = Bukkit.getPlayer(args[1]);
+        Player target = Bukkit.getPlayer(args[0]);
         if (!main.getComponents().NewPlayers.contains(target)) {
             p.sendMessage(main.getComponents().getPrefix("error") + "Le joueur n'existe pas, ou n'est pas nouveau !");
             return false;
