@@ -36,8 +36,15 @@ public class JoinQuitManager implements Listener {
         }
         if (!pl.hasPlayedBefore()){
             main.getInstance().NewPlayers.add(pl);
-            wait(60000);
-            main.getInstance().NewPlayers.remove(pl);
+            
+            //attendre 60 secondes ( 1200 ticks )
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    main.getInstance().NewPlayers.remove(pl);
+                    cancel();
+                }
+            }.runTaskLater(main, 1200L);
         }
     }
 
