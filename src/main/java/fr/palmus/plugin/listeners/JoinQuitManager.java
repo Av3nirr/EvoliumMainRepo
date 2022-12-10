@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ public class JoinQuitManager implements Listener {
     EvoPlugin main = EvoPlugin.getInstance();
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) throws IOException, SQLException, InterruptedException {
+    public void onJoin(PlayerJoinEvent e) throws IOException, SQLException {
         Player pl = e.getPlayer();
         System.out.println("[EvoPlugin] Scoreboard linked !");
         main.getCustomPlayer().initPlayer(pl);
@@ -34,10 +35,16 @@ public class JoinQuitManager implements Listener {
         for (FastBoard boarde : main.getComponents().boards.values()) {
             main.getComponents().updateBoard(pl);
         }
-        if (!pl.hasPlayedBefore()){
-            main.getInstance().NewPlayers.add(pl);
-            wait(60000);
-            main.getInstance().NewPlayers.remove(pl);
+        if (pl.hasPlayedBefore()){
+            main.getComponents().NewPlayers.add(pl);
+            //attendre 60 secondes ( 1200 ticks )
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    main.getComponents().NewPlayers.remove(pl);
+                    cancel();
+                }
+            }.runTaskLater(main, 1200L);
         }
     }
 

@@ -11,5 +11,6 @@ public class PeriodManager implements Listener {
         Player p = e.getPlayer();
         //faire le système de récompenses
         //https://github.com/Palmuss/EvoliumRepo/wiki/
+
     }
 }
