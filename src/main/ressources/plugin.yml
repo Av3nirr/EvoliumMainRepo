@@ -37,7 +37,7 @@ commands:
       - b
       - w
       - welcome
-  find:
+  info:
     description: Montre les infos d'un joueur !
   lobby:
     description: teleport you to the spawn

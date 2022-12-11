@@ -3,6 +3,7 @@ package fr.palmus.plugin;
 import com.sk89q.worldguard.WorldGuard;
 import fr.palmus.plugin.commands.*;
 import fr.palmus.plugin.components.EvoComponent;
+import fr.palmus.plugin.discord.Bot;
 import fr.palmus.plugin.period.PeriodCaster;
 import fr.palmus.plugin.mysql.DatabaseManager;
 import fr.palmus.plugin.player.CustomPlayer;
@@ -153,6 +154,11 @@ public class EvoPlugin extends JavaPlugin {
         }catch (UnknownHostException | ConnectException | NoClassDefFoundError | RuntimeException e ){
             log.log(Level.SEVERE, ChatColor.RED + "Failed to start websockets, EvoPlugin will not take care of web infos cause: " + e.getCause());
         }
+        try{
+            Bot.init();
+        }catch (NoClassDefFoundError e){
+            log.log(Level.SEVERE, ChatColor.RED + "Failed to start discord bot, EvoPlugin will not take care of the bot cause: " + e.getCause());
+        }
 
         for (Player pl : Bukkit.getOnlinePlayers()) {
             try {
@@ -205,7 +211,7 @@ public class EvoPlugin extends JavaPlugin {
         getCommand("farmzone").setExecutor(new FarmzoneExecutor());
         getCommand("rtp").setExecutor(new RTPExecutor());
         getCommand("bienvenue").setExecutor(new PlayerWelcomeExecutor());
-        getCommand("find").setExecutor(new FindExecutor());
+        getCommand("info").setExecutor(new FindExecutor());
         getCommand("lobby").setExecutor(new LobbyExecutor());
         log.log(Level.INFO,ChatColor.GREEN + "Commands modules Enabled");
     }
