@@ -3,14 +3,12 @@ package fr.palmus.plugin;
 import com.sk89q.worldguard.WorldGuard;
 import fr.palmus.plugin.commands.*;
 import fr.palmus.plugin.components.EvoComponent;
-import fr.palmus.plugin.discord.Bot;
 import fr.palmus.plugin.period.PeriodCaster;
 import fr.palmus.plugin.mysql.DatabaseManager;
 import fr.palmus.plugin.player.CustomPlayer;
 import fr.palmus.plugin.economy.Economy;
 import fr.palmus.plugin.listeners.*;
 import fr.palmus.plugin.utils.fastboard.FastBoard;
-import fr.palmus.plugin.websockets.Client;
 import net.coreprotect.CoreProtectAPI;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -23,10 +21,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.ScheduledExecutorService;
@@ -147,18 +144,6 @@ public class EvoPlugin extends JavaPlugin {
         }
 
         log.log(Level.INFO,ChatColor.DARK_GREEN + "-------------------------------------------------------------------");
-
-        try{
-            log.log(Level.INFO, ChatColor.YELLOW + "trying to connect websocket to evolium.fr");
-            Client.LaunchSocket();
-        }catch (UnknownHostException | ConnectException | NoClassDefFoundError | RuntimeException e ){
-            log.log(Level.SEVERE, ChatColor.RED + "Failed to start websockets, EvoPlugin will not take care of web infos cause: " + e.getCause());
-        }
-        try{
-            Bot.init();
-        }catch (NoClassDefFoundError e){
-            log.log(Level.SEVERE, ChatColor.RED + "Failed to start discord bot, EvoPlugin will not take care of the bot cause: " + e.getCause());
-        }
 
         for (Player pl : Bukkit.getOnlinePlayers()) {
             try {
