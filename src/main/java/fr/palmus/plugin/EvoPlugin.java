@@ -206,6 +206,7 @@ public class EvoPlugin extends JavaPlugin {
         getCommand("rtp").setExecutor(new RTPExecutor());
         getCommand("bienvenue").setExecutor(new PlayerWelcomeExecutor());
         getCommand("find").setExecutor(new FindExecutor());
+        getCommand("lobby").setExecutor(new LobbyExecutor());
         log.log(Level.INFO,ChatColor.GREEN + "Commands modules Enabled");
     }
 

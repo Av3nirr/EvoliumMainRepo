@@ -39,6 +39,11 @@ commands:
       - welcome
   find:
     description: Montre les infos d'un joueur !
+  lobby:
+    description: teleport you to the spawn
+    aliases:
+      - spawn
+      - hub
 permissions:
   evoplugin.*:
     description: Administrator permissions.
@@ -55,9 +60,4 @@ permissions:
     description: Access to exp moderation commands
     default: op
 
-  evoplugin.econ_mod:
-    description: Jog a ShipBattle plugin setup parancsaihoz.
-    default: op
-  evoplugin.find:
-    description: Permission /find
-    default: op
+

@@ -35,7 +35,7 @@ public class JoinQuitManager implements Listener {
         for (FastBoard boarde : main.getComponents().boards.values()) {
             main.getComponents().updateBoard(pl);
         }
-        if (!pl.hasPlayedBefore()){
+        if (pl.hasPlayedBefore()){
             main.getComponents().NewPlayers.add(pl);
             //attendre 60 secondes ( 1200 ticks )
             new BukkitRunnable() {

@@ -58,7 +58,7 @@ public class EvoComponent {
     public RegionContainer container;
 
     public ArrayList<Player> NewPlayers = new ArrayList<>();
-    public String[] welcomeList = {"§e%player% §fSouhaite la bienvenue à §e%target%", "§e%target% §fest acceuillis par §e%player%"};
+    public String[] welcomeList = {"§e%player% §fsouhaite la bienvenue à §e%target%", "§e%target% §fest accueilli par §e%player%"};
 
     public void initHashmap(){
 
@@ -130,7 +130,6 @@ public class EvoComponent {
     }
 
     public void LobbyEffect(Player pl){
-        pl.teleport(this.getLobby());
         pl.sendTitle("§dE§5v§do§5l§di§5u§dm","§5§nLobby", 20, 60, 20);
         pl.getWorld().playSound(pl.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1, 1);
         this.launchFirework(pl, 10);
@@ -164,7 +163,7 @@ public class EvoComponent {
         try{
             prefix = user.getCachedData().getMetaData().getPrefix().replace("&", "§").toString().replace('"', ' ');
         }catch (NullPointerException e){
-            prefix = "null";
+            prefix = "Non définit";
         }
         String period = main.getPeriodCaster().getPeriod(plm.getPeriod());
         int money = main.econ.getPlayerEcon(pl).getMoney();
