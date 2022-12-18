@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class LobbyExecutor implements CommandExecutor {
-    EvoPlugin inst;
+    EvoPlugin main = EvoPlugin.getInstance();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player p = (Player) sender;
@@ -18,8 +18,8 @@ public class LobbyExecutor implements CommandExecutor {
         }
         if (p.hasPermission("evolium.spawn.bypasscooldown")){
             p.sendMessage("§eTéléportation au spawn en cours !");
-            p.teleport(inst.getComponents().getLobby());
-            inst.getComponents().LobbyEffect(p);
+            p.teleport(main.getComponents().getLobby());
+            main.getComponents().LobbyEffect(p);
             p.sendMessage("§aVous avez été téléporté au Spawn !");
             return false;
         }
@@ -27,12 +27,12 @@ public class LobbyExecutor implements CommandExecutor {
         new BukkitRunnable() {
             @Override
             public void run() {
-                p.teleport(inst.getComponents().getLobby());
-                inst.getComponents().LobbyEffect(p);
+                p.teleport(main.getComponents().getLobby());
+                main.getComponents().LobbyEffect(p);
                 p.sendMessage("§aVous avez été téléporté au Spawn !");
                 cancel();
             }
-        }.runTaskLater(inst, 100L);
+        }.runTaskLater(main, 100L);
         return false;
     }
 }

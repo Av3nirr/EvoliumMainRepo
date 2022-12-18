@@ -53,6 +53,8 @@ public class EvoComponent {
 
     public HashMap<String, Integer> prehistoireKill;
 
+    public ArrayList<Crate> crates = new ArrayList<>();
+
     public BlockVector2 preRegion1;
     public BlockVector2 preRegion2;
     public RegionContainer container;
@@ -61,7 +63,6 @@ public class EvoComponent {
     public String[] welcomeList = {"§e%player% §fsouhaite la bienvenue à §e%target%", "§e%target% §fest accueilli par §e%player%"};
 
     public void initHashmap(){
-
     }
 
     /**

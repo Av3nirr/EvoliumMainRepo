@@ -198,6 +198,7 @@ public class EvoPlugin extends JavaPlugin {
         getCommand("bienvenue").setExecutor(new PlayerWelcomeExecutor());
         getCommand("info").setExecutor(new FindExecutor());
         getCommand("lobby").setExecutor(new LobbyExecutor());
+        getCommand("crate").setExecutor(new CrateExecutor());
         log.log(Level.INFO,ChatColor.GREEN + "Commands modules Enabled");
     }
 
@@ -209,6 +210,7 @@ public class EvoPlugin extends JavaPlugin {
         pm.registerEvents(new DamageManager(), this);
         pm.registerEvents(new InventoryManager(), this);
         pm.registerEvents(new ScoreboardUpdater(this, LPapi), this);
+        pm.registerEvents(new CrateOpenManager(), this);
         log.log(Level.INFO,ChatColor.GREEN + "Listeners modules Enabled");
     }
 

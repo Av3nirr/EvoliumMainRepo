@@ -39,6 +39,8 @@ commands:
       - welcome
   info:
     description: Montre les infos d'un joueur !
+  crate:
+    description: Permet de créer/modifier une crate.
   lobby:
     description: teleport you to the spawn
     aliases:
