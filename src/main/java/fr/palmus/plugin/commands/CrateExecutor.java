@@ -20,22 +20,24 @@ public class CrateExecutor implements CommandExecutor {
         if (!(p instanceof Player)){
             return false;
         }
-        if (args.length != 1){
+        if (args.length < 1){
             p.sendMessage(main.getComponents().getString("prefix.error") + "Vous devez définir un nom.");
             return false;
+        }
+        StringBuilder name = new StringBuilder("");
+        for (String part : args) {
+            if (!name.toString().equals("")) {
+                name.append(" ");
+            }
+            name.append(part);
         }
 
 
         Location playerLoc = p.getLocation();
-        int x = (int) playerLoc.getX();
-        int y = (int) playerLoc.getY();
-        int z = (int) playerLoc.getZ();
-
-        Location crateLoc = new Location(p.getWorld(), x, y, z);
-        Crate myCrate = new Crate(args[0], crateLoc, "No description yet !", p.getWorld());
+        Crate myCrate = new Crate(name.toString(), playerLoc, "No description yet !", p.getWorld());
         myCrate.setArmorStand();
         main.getComponents().crates.add(myCrate);
-        p.getWorld().getBlockAt(crateLoc).setType(Material.CHEST);
+        p.getWorld().getBlockAt(playerLoc).setType(Material.CHEST);
 
 
         p.sendMessage(main.getComponents().getString("prefix.ok") + "La crate à été créé en " + playerLoc.getX() +", "+playerLoc.getY()+", "+playerLoc.getZ()+" !");

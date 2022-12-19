@@ -2,9 +2,12 @@ package fr.palmus.plugin.listeners;
 
 import fr.palmus.plugin.EvoPlugin;
 import fr.palmus.plugin.components.Crate;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -12,24 +15,21 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class CrateOpenManager implements Listener {
     EvoPlugin main = EvoPlugin.getInstance();
+    @EventHandler
     public void onClick(PlayerInteractEvent e){
         Player p = e.getPlayer();
-        if (e.getAction() == Action.RIGHT_CLICK_AIR){
-            System.out.println("Bon event !");
-            p.sendMessage("C'est bon !");
-        }
-        if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Location loc = e.getClickedBlock().getLocation();
             World world = e.getClickedBlock().getWorld();
-            p.sendMessage("Block appuyé !" + loc);
-            //for (Crate c : main.getComponents().crates){
-              //  if (c.getLoc().equals(loc)){
-                //    if (c.getWorld().equals(world)){
-                  //      p.sendMessage("Crate trouvée, son nom est: " + c.getName());
-                    //    break;
-                    //}
-                //}
-            //}
+            for (Crate c : main.getComponents().crates){
+                Location crateLoc = e.getClickedBlock().getWorld().getBlockAt(c.getLoc()).getLocation();
+                if (crateLoc.equals(loc)){
+                    if (c.getWorld().equals(world)){
+                        p.sendMessage("Crate trouvée, son nom est: " + c.getName());
+                        break;
+                    }
+                }
+            }
 
 
         }
