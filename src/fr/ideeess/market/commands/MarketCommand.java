@@ -1,11 +1,13 @@
 package fr.ideeess.market.commands;
 
 import fr.ideeess.market.MarketEvolium;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class MarketCommand implements CommandExecutor {
     MarketEvolium main;
@@ -22,9 +24,40 @@ public class MarketCommand implements CommandExecutor {
 
                 if (args[0].equalsIgnoreCase("sell")){
 
-                    if (!args[1].equalsIgnoreCase("")){
+                    if (!args[1].equalsIgnoreCase("") && NumberUtils.isParsable(args[1])){
 
+                        if (!args[2].equalsIgnoreCase("") && NumberUtils.isParsable(args[2])){
 
+                            if (player.hasPermission("market.sellitem")){
+
+                                ItemStack it = player.getItemInHand();
+                                int itNumber = Integer.parseInt(args[1]);
+                                int itPrice = Integer.parseInt(args[2]);
+
+                                if (player.getInventory().contains(it.getType(),itNumber)){
+                                    int seconds = Math.toIntExact(System.currentTimeMillis() / 1000);
+
+                                    main.getConfig().set(seconds + ".owner",player.getDisplayName());
+                                    main.getConfig().set(seconds + ".item.name",it.getItemMeta().getDisplayName());
+                                    main.getConfig().set(seconds + ".item.lore",it.getItemMeta().getLore());
+                                    main.getConfig().set(seconds + ".item.type",it.getType());
+                                    main.getConfig().set(seconds + ".price",itPrice);
+                                    main.getConfig().set(seconds + ".quantity",itNumber);
+
+                                    player.sendMessage(ChatColor.GREEN + "Vous vendez à présent " + itNumber + " " + it.getItemMeta().getDisplayName() + " à " + itPrice);
+
+                                    return false;
+                                }
+
+                                player.sendMessage(ChatColor.RED + "Vous n'avez pas " + itNumber + " " + it.getItemMeta().getDisplayName());
+
+                                return false;
+                            }
+
+                            return false;
+                        }
+
+                        player.sendMessage(ChatColor.RED + "Vous devez indiquer le prix");
 
                         return false;
                     }
