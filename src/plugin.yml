@@ -1,0 +1,6 @@
+name: MarketEvolium
+author: IDEEESS
+version: 0.0.1
+main: fr.ideeess.market.MarketEvolium
+commands:
+  market:
