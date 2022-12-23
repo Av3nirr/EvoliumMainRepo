@@ -25,10 +25,10 @@ public class PlayerWelcomeExecutor implements CommandExecutor {
             p.sendMessage(main.getComponents().getPrefix("error") + "usage: /b <player>");
             return false;
         }
-        //if(cooldowns.get(p.getName()) - System.currentTimeMillis() * 1000 < cooldownTime) {
-        //    p.sendMessage(main.getComponents().getPrefix("error") + "Vous devez attendre avant de refaire la commande");
-        //    return false;
-        //}
+        if(cooldowns.get(p.getName()) - System.currentTimeMillis() * 1000 < cooldownTime) {
+            p.sendMessage(main.getComponents().getPrefix("error") + "Vous devez attendre avant de refaire la commande");
+            return false;
+        }
 
         Player target = Bukkit.getPlayer(args[0]);
         if (!main.getComponents().NewPlayers.contains(target)) {
