@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: commons-lang3-3.12.0.jar spigot-api-1.18-R0.1-20211210.13163
+ 9-28.jar EvoPlugin.jar
+

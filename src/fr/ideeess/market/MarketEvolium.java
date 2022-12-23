@@ -34,6 +34,7 @@ public class MarketEvolium extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.saveConfig();
         super.onDisable();
     }
 
