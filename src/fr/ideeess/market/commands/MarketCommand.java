@@ -57,11 +57,12 @@ public class MarketCommand implements CommandExecutor {
                                             main.saveConfig();
                                         }
 
-                                        player.sendMessage(ChatColor.GREEN + "Vous vendez à présent " + itNumber + " " + it.getType().toString() + " à " + itPrice + " EvoCoins");
+                                        player.sendMessage(ChatColor.GREEN + "Vous vendez à présent " + itNumber + " " + it.getType().getKey().toString() + " à " + itPrice + " EvoCoins");
+                                        player.sendMessage(ChatColor.GREEN + "Vous vendez à présent " + itNumber + " " + it.getType().toString().toLowerCase() + " à " + itPrice + " EvoCoins");
                                         main.saveConfig();
                                         return false;
                                     }
-                                    player.sendMessage(ChatColor.RED + "Vous n'avez pas " + itNumber + " " + name);
+                                    player.sendMessage(ChatColor.RED + "Vous n'avez pas " + itNumber + " " + it.getType().getKey().toString());
                                     return false;
                                 }
                                 player.sendMessage(ChatColor.RED + "Vous ne pouvez pas vendre de l'air");
