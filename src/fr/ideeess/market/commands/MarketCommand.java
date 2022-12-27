@@ -38,13 +38,13 @@ public class MarketCommand implements CommandExecutor {
                                 int itNumber = Integer.parseInt(args[1]);
                                 int itPrice = Integer.parseInt(args[2]);
                                 if (it.getType() != Material.AIR) {
+                                    String name = "";
+                                    if (it.getItemMeta().getDisplayName().equalsIgnoreCase("")){
+                                        name = it.getItemMeta().getDisplayName();
+                                    }else {
+                                        name = it.getType().name();
+                                    }
                                     if (player.getInventory().contains(it,itNumber)) {
-                                        String name = "";
-                                        if (it.getItemMeta().getDisplayName().equalsIgnoreCase("")){
-                                            name = it.getItemMeta().getDisplayName();
-                                        }else {
-                                            name = it.getType().name();
-                                        }
 
                                         int seconds = Math.toIntExact(System.currentTimeMillis() / 1000);
 
