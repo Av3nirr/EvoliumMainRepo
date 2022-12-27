@@ -31,7 +31,7 @@ public class MarketCommand implements CommandExecutor {
 
                             if (player.hasPermission("market.sellitem")) {
 
-                                ItemStack it = player.getItemInUse();
+                                ItemStack it = player.getInventory().getItemInMainHand();
                                 int itNumber = Integer.parseInt(args[1]);
                                 int itPrice = Integer.parseInt(args[2]);
                                 if (it.getType() != Material.AIR) {
