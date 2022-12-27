@@ -38,28 +38,28 @@ public class MarketCommand implements CommandExecutor {
                                 int itNumber = Integer.parseInt(args[1]);
                                 int itPrice = Integer.parseInt(args[2]);
                                 if (it.getType() != Material.AIR) {
-                                    String name = "";
-                                    if (it.getItemMeta().hasDisplayName()){
-                                        name = it.getItemMeta().getDisplayName();
-                                    }else {
-                                        name = it.getType().name();
-                                    }
+                                    String name = it.getType().name();
+                                    int id = it.getData().getData();
+
                                     if (player.getInventory().contains(it,itNumber)) {
 
                                         int seconds = Math.toIntExact(System.currentTimeMillis() / 1000);
 
                                         main.getConfig().set(seconds + ".owner", player.getDisplayName());
-                                        main.getConfig().set(seconds + ".item.name", name);
+                                        main.getConfig().set(seconds + ".item.id", id);
                                         main.getConfig().set(seconds + ".item.lore", it.getItemMeta().getLore());
                                         main.getConfig().set(seconds + ".item.type", it.getType());
                                         main.getConfig().set(seconds + ".price", itPrice);
                                         main.getConfig().set(seconds + ".quantity", itNumber);
+                                        if (it.getItemMeta().hasDisplayName()){
+                                            main.getConfig().set(seconds + ".item.displayName",it.getItemMeta().getDisplayName());
+                                        }
 
                                         player.sendMessage(ChatColor.GREEN + "Vous vendez à présent " + itNumber + " " + it.getItemMeta().getDisplayName() + " à " + itPrice + " EvoCoins");
                                         main.saveConfig();
                                         return false;
                                     }
-                                    player.sendMessage(ChatColor.RED + "Vous n'avez pas " + itNumber + " " + Objects.requireNonNull(it.getItemMeta()).getDisplayName());
+                                    player.sendMessage(ChatColor.RED + "Vous n'avez pas " + itNumber + " " + name);
                                     return false;
                                 }
                                 player.sendMessage(ChatColor.RED + "Vous ne pouvez pas vendre de l'air");
