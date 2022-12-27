@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Objects;
 
@@ -38,10 +39,17 @@ public class MarketCommand implements CommandExecutor {
                                 int itPrice = Integer.parseInt(args[2]);
                                 if (it.getType() != Material.AIR) {
                                     if (player.getInventory().contains(it,itNumber)) {
+                                        String name = "";
+                                        if (it.getItemMeta().getDisplayName().equalsIgnoreCase("")){
+                                            name = it.getItemMeta().getDisplayName();
+                                        }else {
+                                            name = it.getType().name();
+                                        }
+
                                         int seconds = Math.toIntExact(System.currentTimeMillis() / 1000);
 
                                         main.getConfig().set(seconds + ".owner", player.getDisplayName());
-                                        main.getConfig().set(seconds + ".item.name", Objects.requireNonNull(it.getItemMeta()).getDisplayName());
+                                        main.getConfig().set(seconds + ".item.name", name);
                                         main.getConfig().set(seconds + ".item.lore", it.getItemMeta().getLore());
                                         main.getConfig().set(seconds + ".item.type", it.getType());
                                         main.getConfig().set(seconds + ".price", itPrice);
@@ -77,6 +85,13 @@ public class MarketCommand implements CommandExecutor {
             }
 
             if (player.hasPermission("market.use")){
+
+                ItemStack it = new ItemStack(Material.LEATHER_HELMET);
+                ItemMeta itM = it.getItemMeta();
+                itM.setDisplayName(ChatColor.RED + "752ddsqsd");
+                it.setItemMeta(itM);
+
+                player.getInventory().addItem(it);
 
                 return true;
             }
