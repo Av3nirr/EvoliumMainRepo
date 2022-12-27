@@ -24,9 +24,9 @@ public class MarketCommand implements CommandExecutor {
 
                 if (args[0].equalsIgnoreCase("sell")){
 
-                    if (!args[1].equalsIgnoreCase("") && NumberUtils.isParsable(args[1])){
+                    if (!args[1].equalsIgnoreCase("")){
 
-                        if (!args[2].equalsIgnoreCase("") && NumberUtils.isParsable(args[2])){
+                        if (!args[2].equalsIgnoreCase("")){
 
                             if (player.hasPermission("market.sellitem")){
 
