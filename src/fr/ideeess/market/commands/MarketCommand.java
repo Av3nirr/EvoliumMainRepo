@@ -34,7 +34,7 @@ public class MarketCommand implements CommandExecutor {
                                 ItemStack it = player.getItemInUse();
                                 int itNumber = Integer.parseInt(args[1]);
                                 int itPrice = Integer.parseInt(args[2]);
-                                if (it != null || it.getType() != Material.AIR) {
+                                if (it.getType() != Material.AIR) {
                                     if (player.getInventory().contains(it.getType(), itNumber)) {
                                         int seconds = Math.toIntExact(System.currentTimeMillis() / 1000);
 
