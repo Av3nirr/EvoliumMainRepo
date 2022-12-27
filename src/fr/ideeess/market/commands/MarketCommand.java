@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
+
 public class MarketCommand implements CommandExecutor {
     MarketEvolium main;
 
@@ -35,11 +37,11 @@ public class MarketCommand implements CommandExecutor {
                                 int itNumber = Integer.parseInt(args[1]);
                                 int itPrice = Integer.parseInt(args[2]);
                                 if (it.getType() != Material.AIR) {
-                                    if (player.getInventory().contains(it.getType(), itNumber)) {
+                                    if (player.getInventory().contains(it,itNumber)) {
                                         int seconds = Math.toIntExact(System.currentTimeMillis() / 1000);
 
                                         main.getConfig().set(seconds + ".owner", player.getDisplayName());
-                                        main.getConfig().set(seconds + ".item.name", it.getItemMeta().getDisplayName());
+                                        main.getConfig().set(seconds + ".item.name", Objects.requireNonNull(it.getItemMeta()).getDisplayName());
                                         main.getConfig().set(seconds + ".item.lore", it.getItemMeta().getLore());
                                         main.getConfig().set(seconds + ".item.type", it.getType());
                                         main.getConfig().set(seconds + ".price", itPrice);
@@ -49,7 +51,7 @@ public class MarketCommand implements CommandExecutor {
                                         main.saveConfig();
                                         return false;
                                     }
-                                    player.sendMessage(ChatColor.RED + "Vous n'avez pas " + itNumber + " " + it.getItemMeta().getDisplayName());
+                                    player.sendMessage(ChatColor.RED + "Vous n'avez pas " + itNumber + " " + Objects.requireNonNull(it.getItemMeta()).getDisplayName());
                                     return false;
                                 }
                                 player.sendMessage(ChatColor.RED + "Vous ne pouvez pas vendre de l'air");
