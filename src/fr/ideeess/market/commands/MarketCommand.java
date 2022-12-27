@@ -39,7 +39,7 @@ public class MarketCommand implements CommandExecutor {
                                 int itPrice = Integer.parseInt(args[2]);
                                 if (it.getType() != Material.AIR) {
                                     String name = "";
-                                    if (it.getItemMeta().getDisplayName().equalsIgnoreCase("")){
+                                    if (it.getItemMeta().hasDisplayName()){
                                         name = it.getItemMeta().getDisplayName();
                                     }else {
                                         name = it.getType().name();
